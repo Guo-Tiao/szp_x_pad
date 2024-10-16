@@ -1,0 +1,80 @@
+menu "Szp Project Config"
+    
+    #项目配置项
+    menu "项目配置"
+        config SZP_PROJECT_RUN_DEMO
+            bool "运行demo"
+            default n
+    endmenu
+
+    #扩展接口配置项
+    menu "扩展接口配置"
+        choice SZP_EXP_ITF_FUNCTION
+            prompt "扩展接口功能"
+            default SZP_EXP_ITF_FUNC_UART   
+    
+            config SZP_EXP_ITF_FUNC_NONE
+                bool "NONE"
+            config SZP_EXP_ITF_FUNC_UART
+                bool "UART"
+            config SZP_EXP_ITF_FUNC_CAN
+                bool "CAN"
+            config SZP_EXP_ITF_FUNC_USB
+                bool "USB"    
+            config SZP_EXP_ITF_FUNC_GPIO
+                bool "GPIO"
+        endchoice
+
+        #使能串口配置时
+        if SZP_EXP_ITF_FUNC_UART
+            menu "扩展串口配置"
+                #串口引脚选择
+                choice SZP_EXP_ITF_UART_RX_TX
+                    prompt "串口配置引脚"
+                    default SZP_EXP_ITF_UART_RX_TX_1   
+
+                    config SZP_EXP_ITF_UART_RX_TX_1
+                        bool "RX-IO18/TX-IO19"
+                    config SZP_EXP_ITF_UART_RX_TX_2
+                        bool "RX-IO19/TX-IO18"
+                endchoice
+                #串口波特率        
+                choice 
+                    prompt "串口波特率"
+                    default SZP_EXP_ITF_UART_BAUD_115200  
+
+                    config SZP_EXP_ITF_UART_BAUD_9600
+                        bool "9600"
+                    config SZP_EXP_ITF_UART_BAUD_19200
+                        bool "19200"
+                    config SZP_EXP_ITF_UART_BAUD_38400
+                        bool "38400"
+                    config SZP_EXP_ITF_UART_BAUD_57600
+                        bool "57600"
+                    config SZP_EXP_ITF_UART_BAUD_115200
+                        bool "115200"
+                endchoice       
+                #串口波特率设置        
+                config  SZP_EXP_ITF_UART_BAUD
+                    int
+                    default 9600 if SZP_EXP_ITF_UART_BAUD_9600
+                    default 19200 if SZP_EXP_ITF_UART_BAUD_19200
+                    default 38400 if SZP_EXP_ITF_UART_BAUD_38400
+                    default 57600 if SZP_EXP_ITF_UART_BAUD_57600
+                    default 115200 if SZP_EXP_ITF_UART_BAUD_115200
+                endmenu
+                #串口接收缓存         
+                config SZP_EXP_ITF_UART_RX_BUFFER
+                    int "扩展串口接收缓存大小"
+                    range 0   2048
+                    default 1024
+                #串口发送缓存
+                config SZP_EXP_ITF_UART_TX_BUFFER
+                        int "扩展串口发送缓存大小"
+                        range 0   2048
+                        default 1024
+        endif 
+
+    endmenu
+
+endmenu
