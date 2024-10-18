@@ -1,4 +1,5 @@
 #include "szp_key.h"
+#include "common_macro.h"
 #include <stdio.h>
 #include <inttypes.h>
 #include "driver/gpio.h"
@@ -92,7 +93,7 @@ void szp_key_t_init()
     xEventGroupClearBits(event_group_szp_key, 0x00ffffff);
 }
 //Key监控按钮任务
-void szp_key_monitor_task(void *params)
+static void szp_key_monitor_task(void *params)
 {
     uint32_t io_num;
     //状态机判断
@@ -242,11 +243,11 @@ void szp_key_init(void)
             .pull_up_en = GPIO_PULLUP_ENABLE    //上拉电阻是否使能
     };
     //配置GPIO
-    gpio_config(&key_cfg);
+    SZP_ESP_ERR_CHECK(gpio_config(&key_cfg));
     //安装GPIO中断服务程序，即使能中断
-    gpio_install_isr_service(0);    
+    SZP_ESP_ERR_CHECK(gpio_install_isr_service(0));
     //添加中断函数
-    gpio_isr_handler_add(SZP_KEY_NUM, szp_key_isr_handler, (void *)SZP_KEY_NUM);
+    SZP_ESP_ERR_CHECK(gpio_isr_handler_add(SZP_KEY_NUM, szp_key_isr_handler, (void *)SZP_KEY_NUM));
 
 
     //创建事件组

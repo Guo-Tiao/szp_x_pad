@@ -37,9 +37,9 @@ esp_err_t szp_uart_init(void)
         .source_clk = UART_SCLK_APB,
     };
     //设置缓存和使能配置
-    SZP_ESP_ERR_CHECK(uart_driver_install(SZP_UART_NUM, SZP_UART_RX_BUFFER_SIZE * 2, SZP_UART_TX_BUFFER_SIZE * 2, 0, NULL, 0))
-    SZP_ESP_ERR_CHECK(uart_param_config(SZP_UART_NUM, &uart_config))
-    SZP_ESP_ERR_CHECK(uart_set_pin(SZP_UART_NUM, SZP_UART_TX, SZP_UART_RX, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE))
+    SZP_ESP_ERR_CHECK(uart_driver_install(SZP_UART_NUM, SZP_UART_RX_BUFFER_SIZE * 2, SZP_UART_TX_BUFFER_SIZE * 2, 0, NULL, 0));
+    SZP_ESP_ERR_CHECK(uart_param_config(SZP_UART_NUM, &uart_config));
+    SZP_ESP_ERR_CHECK(uart_set_pin(SZP_UART_NUM, SZP_UART_TX, SZP_UART_RX, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE));
     return ESP_OK;
 }
 

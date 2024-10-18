@@ -6,6 +6,13 @@ menu "Szp Project Config"
             bool "运行demo"
             default n
     endmenu
+    
+    #项目宏定义相关
+    menu "项目定义"
+        config USE_SZP_ESP_ERR_CHECK
+            bool "使用自定义ESP_ERR_CHECK"
+            default n
+    endmenu
 
     #扩展接口配置项
     menu "扩展接口配置"
@@ -75,6 +82,21 @@ menu "Szp Project Config"
                         default 1024
         endif 
 
+    endmenu
+
+    #项目宏定义相关
+    menu "网络配置"
+        menu "WIFI连接"
+            config SZP_WIFI_SSID
+                string "WiFi名称"
+                default ""
+            config SZP_WIFI_PASSWORD
+                string "WiFi密码"
+                default ""
+            config SZP_WIFI_RETRY_COUNT
+                int "WiFi重连次数"
+                default 3
+        endmenu
     endmenu
 
 endmenu

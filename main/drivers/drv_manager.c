@@ -7,7 +7,7 @@
 #include "szp_uart.h"
 #endif
 
-void drv_init()
+void drv_init(void)
 {
     //初始化按键
     szp_key_init();

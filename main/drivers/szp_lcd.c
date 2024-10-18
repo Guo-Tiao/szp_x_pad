@@ -66,7 +66,7 @@ esp_err_t szp_lcd_init(void)
         .quadhd_io_num = -1,
         .max_transfer_sz = SZP_LCD_H_RES * 80 * sizeof(uint16_t),
     };
-    SZP_ESP_ERR_CHECK(spi_bus_initialize(SZP_LCD_SPI_HOST, &spi_cfg, SPI_DMA_CH_AUTO))
+    SZP_ESP_ERR_CHECK(spi_bus_initialize(SZP_LCD_SPI_HOST, &spi_cfg, SPI_DMA_CH_AUTO));
 
     //初始化ESP-LCD-Panel
     esp_lcd_panel_io_handle_t io_handle = NULL;
@@ -87,15 +87,15 @@ esp_err_t szp_lcd_init(void)
         .reset_gpio_num = SZP_LCD_RST_IO_NUM,
         .rgb_ele_order = LCD_RGB_ELEMENT_ORDER_RGB,
         .bits_per_pixel = 16,
-    }; 
-    SZP_ESP_ERR_CHECK(esp_lcd_new_panel_st7789(io_handle, &panel_config, &szp_lcd_panel_handle))
+    };
+    SZP_ESP_ERR_CHECK(esp_lcd_new_panel_st7789(io_handle, &panel_config, &szp_lcd_panel_handle));
 
     //LCD画板初始化
-    SZP_ESP_ERR_CHECK(esp_lcd_panel_reset(szp_lcd_panel_handle))
-    SZP_ESP_ERR_CHECK(esp_lcd_panel_init(szp_lcd_panel_handle))
+    SZP_ESP_ERR_CHECK(esp_lcd_panel_reset(szp_lcd_panel_handle));
+    SZP_ESP_ERR_CHECK(esp_lcd_panel_init(szp_lcd_panel_handle));
     SZP_ESP_ERR_CHECK(esp_lcd_panel_mirror(szp_lcd_panel_handle, false, false));
     SZP_ESP_ERR_CHECK(esp_lcd_panel_invert_color(szp_lcd_panel_handle, true));
-    SZP_ESP_ERR_CHECK(esp_lcd_panel_disp_on_off(szp_lcd_panel_handle, true))
+    SZP_ESP_ERR_CHECK(esp_lcd_panel_disp_on_off(szp_lcd_panel_handle, true));
     //背光初始化
     //初始化屏幕背光
     gpio_config_t bl_gpio_config = 
@@ -103,7 +103,7 @@ esp_err_t szp_lcd_init(void)
         .mode = GPIO_MODE_OUTPUT,
         .pin_bit_mask = 1ULL << SZP_LCD_BACK_LIGHT_IO_NUM
     };
-    SZP_ESP_ERR_CHECK(gpio_config(&bl_gpio_config))
+    SZP_ESP_ERR_CHECK(gpio_config(&bl_gpio_config));
     gpio_set_level(SZP_LCD_BACK_LIGHT_IO_NUM, SZP_LCD_BACK_LIGHT_ON_LEVEL);
 
     // Prepare and then apply the LEDC PWM timer configuration
@@ -125,11 +125,11 @@ esp_err_t szp_lcd_init(void)
         .duty           = 0, // Set duty
         .hpoint         = 0
     };
-    ESP_ERROR_CHECK(ledc_channel_config(&ledc_channel));
+    SZP_ESP_ERR_CHECK(ledc_channel_config(&ledc_channel));
     // 设置占空比
-    ESP_ERROR_CHECK(ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, 8191*(0.5)));  
+    SZP_ESP_ERR_CHECK(ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, 8191*(0.5)));  
     // 更新背光
-    ESP_ERROR_CHECK(ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0));
+    SZP_ESP_ERR_CHECK(ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0));
     
     return ESP_OK;
 }

@@ -1,6 +1,6 @@
 #include "szp_i2c.h"
 #include "driver/i2c.h"
-
+#include "common_macro.h"
 
 esp_err_t szp_i2c_init(void)
 {
@@ -15,7 +15,8 @@ esp_err_t szp_i2c_init(void)
         .master.clk_speed = SZP_I2C_FREQ_HZ,
     };
 
-    i2c_param_config(i2c_master_port, &conf);
+    SZP_ESP_ERR_CHECK(i2c_param_config(i2c_master_port, &conf));
+    SZP_ESP_ERR_CHECK(i2c_driver_install(i2c_master_port, conf.mode, SZP_I2C_RX_BUF_DISABLE, SZP_I2C_TX_BUF_DISABLE, 0));
 
-    return i2c_driver_install(i2c_master_port, conf.mode, SZP_I2C_RX_BUF_DISABLE, SZP_I2C_TX_BUF_DISABLE, 0);
+    return ESP_OK;
 }
