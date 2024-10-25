@@ -122,7 +122,7 @@ esp_err_t szp_wifi_connect(SzpWifiConnectConfig config)
     SZP_ESP_ERR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
     SZP_ESP_ERR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config));
 
-    ESP_LOGI(SZP_WIFI_TAG, "开始连接wifi: %s", wifi_config.sta.ssid);
+    ESP_LOGI(SZP_WIFI_TAG, "开始连接wifi,ssid:%s 密码:%s", wifi_config.sta.ssid,wifi_config.sta.password);
     SZP_ESP_ERR_CHECK(esp_wifi_start());
 
     return ESP_OK;

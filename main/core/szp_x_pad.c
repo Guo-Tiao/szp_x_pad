@@ -6,6 +6,7 @@
 #include "szp_sensor_manager.h"
 #include "storage_manager.h"
 #include "network_manager.h"
+#include "work_controller.h"
 #include "lvgl_manager.h"
 
 
@@ -23,9 +24,11 @@ void app_core_init()
    network_init();
    //界面(LVGL)初始化
    szp_lvgl_init();
+   //工作控制器初始化
+   szp_work_init();
 }
 
-extern void ui_main_setup();
+extern void ui_main_setup();//ui测试
 void app_core_run(void)
 {
    ui_main_setup();

@@ -11,44 +11,70 @@
 
 //实战派wifi事件组
 EventGroupHandle_t event_group_szp_wifi;
+//当前wifi状态
+SzpWifiStateEvent network_current_wifi_state;
 
 void network_init(void)
 {
     //wifi初始化
     esp_err_t ret= szp_wifi_init();
-    if(ret!=ESP_OK)
-    {
-        szp_wifi_disconnect();
-    }
-    else
+    if(ret==ESP_OK)
     {
         //创建wifi事件组
         event_group_szp_wifi = xEventGroupCreate();
     }
+    network_current_wifi_state = EV_SZP_WIFI_CONNECT_FAIL;
 }
 
 static void cb_szp_network_wifi_event(SzpWifiConnectEvent e)
 {
     if(event_group_szp_wifi)
     {
-        printf("cb_szp_network_wifi_event:%d\r\n", e);
         switch (e)
         {
         case SZP_WIFI_CONNECTED:
+            network_current_wifi_state = EV_SZP_WIFI_CONNECT_SUCCESS;
             xEventGroupSetBits(event_group_szp_wifi, EV_SZP_WIFI_CONNECT_SUCCESS);
             break;
         case SZP_WIFI_DISCONNECTED:
+            network_current_wifi_state = EV_SZP_WIFI_CONNECT_FAIL;
             xEventGroupSetBits(event_group_szp_wifi, EV_SZP_WIFI_CONNECT_FAIL);
             break;
         case SZP_WIFI_RECONNECTING:
+            network_current_wifi_state = EV_SZP_WIFI_RECONNECTING;
             xEventGroupSetBits(event_group_szp_wifi, EV_SZP_WIFI_RECONNECTING);
             break;
         }
     }
 }
 
+void network_wifi_set_config(const char *ssid, const char *password)
+{
+    szp_nvs_write_str(Nvs_NameSpace_Network,Nvs_Key_Wifi_Ssid,ssid);
+    szp_nvs_write_str(Nvs_NameSpace_Network,Nvs_Key_Wifi_Password,password);
+}
+
+void network_wifi_set_ssid(const char *ssid)
+{
+    szp_nvs_write_str(Nvs_NameSpace_Network, Nvs_Key_Wifi_Ssid, ssid);
+}
+
+void network_wifi_set_password(const char *password)
+{
+    szp_nvs_write_str(Nvs_NameSpace_Network, Nvs_Key_Wifi_Password, password);
+}
+
+size_t network_wifi_get_ssid(char *value, int maxlen)
+{
+    return szp_nvs_read_str(Nvs_NameSpace_Network, Nvs_Key_Wifi_Ssid, value,maxlen);
+}
+
 esp_err_t network_wifi_connect()
 {
+    if(network_current_wifi_state==EV_SZP_WIFI_CONNECT_SUCCESS)
+    {
+        return ESP_FAIL;
+    }
     //查询NVS中的wifi数据,没有则使用配置中的wifi
     char wifi_ssid[32];
     char wifi_password[64];
@@ -75,10 +101,15 @@ esp_err_t network_wifi_connect()
 
 esp_err_t network_wifi_disconnect()
 {
-    return szp_wifi_disconnect();
+    if(network_current_wifi_state==EV_SZP_WIFI_CONNECT_SUCCESS)
+    {
+        return szp_wifi_disconnect();
+    }
+    return ESP_FAIL;
 }
 
-uint32_t network_wait_wifi_event(SzpWifiEvent evnet, uint32_t waitTime)
+
+uint32_t network_wait_wifi_event(SzpWifiStateEvent evnet, uint32_t waitTime)
 {
     if(!event_group_szp_wifi)
     {
@@ -90,4 +121,9 @@ uint32_t network_wait_wifi_event(SzpWifiEvent evnet, uint32_t waitTime)
                                (BaseType_t)pdFALSE,
                                (TickType_t)waitTime);
 
+}
+
+SzpWifiStateEvent network_wifi_current_state()
+{
+    return network_current_wifi_state;
 }

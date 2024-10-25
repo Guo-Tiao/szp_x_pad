@@ -6,6 +6,7 @@ file(GLOB DRIVERS "drivers/*.c")    #驱动程序
 file(GLOB SENSOR "sensor/*.c")      #传感器
 file(GLOB AUDIO "audio/*.c")      #音频
 file(GLOB NETWORK "network/*.c")      #网络
+file(GLOB BLUETOOTH "bluetooth/*.c")      #蓝牙
 file(GLOB STORAGE "storage/*.c")      #存储
 
 file(GLOB UI "ui/*.c")      #显示和触摸
@@ -17,13 +18,14 @@ file(GLOB DEMO "demo/*.c")  #测试demo
 #添加工程文件
 set(PROJECT_SOURCES
         "main.c"
-
+    
         ${CORE}
         ${COMMON}
         ${DRIVERS}
         ${SENSOR}
         ${AUDIO}
         ${NETWORK}
+        ${BLUETOOTH}
         ${STORAGE}
 
         ${UI}
@@ -41,6 +43,7 @@ list(APPEND INC_DIR
     ${CMAKE_CURRENT_SOURCE_DIR}/sensor
     ${CMAKE_CURRENT_SOURCE_DIR}/audio
     ${CMAKE_CURRENT_SOURCE_DIR}/network
+    ${CMAKE_CURRENT_SOURCE_DIR}/bluetooth
     ${CMAKE_CURRENT_SOURCE_DIR}/storage
     ${CMAKE_CURRENT_SOURCE_DIR}/ui
     ${CMAKE_CURRENT_SOURCE_DIR}/assets

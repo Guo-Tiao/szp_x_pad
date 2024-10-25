@@ -66,6 +66,25 @@
         "cstring": "cpp",
         "event_groups.h": "c",
         "esp_wifi.h": "c",
-        "wifi_manager.h": "c"
+        "wifi_manager.h": "c",
+        "dns.h": "c",
+        "esp_gatt_common_api.h": "c",
+        "esp_gap_ble_api.h": "c",
+        "esp_gatts_api.h": "c",
+        "esp_bt_main.h": "c",
+        "esp_bt_defs.h": "c",
+        "esp_bt.h": "c",
+        "szp_ble_gatts_def.h": "c",
+        "esp_log.h": "c",
+        "chrono": "c",
+        "network_manager.h": "c",
+        "ratio": "c",
+        "system_error": "c",
+        "functional": "c",
+        "tuple": "c",
+        "utility": "c",
+        "szp_ble_gatts.h": "c",
+        "esp_timer.h": "c",
+        "szp_config_def.h": "c"
     }
 }
