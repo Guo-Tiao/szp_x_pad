@@ -764,6 +764,28 @@ bool szp_ble_gatts_add_char(szp_gatts_char_descr char_descr)
     return true;
 }
 
+bool szp_ble_gatts_del_all_char()
+{
+     esp_bluedroid_status_t status=esp_bluedroid_get_status();
+    //开启时不能删除char
+    if(status==ESP_BLUEDROID_STATUS_ENABLED)
+    {
+        return false;
+    }
+    SzpGattsCharNode **head_ref = &gl_szp_gatts_profile_tab[SZP_BLE_GATTS_APP_ID].szp_gatts_char_list; // 二级指针获取头节点地址
+    SzpGattsCharNode* temp;
+    SzpGattsCharNode *node = *head_ref;
+    while (node!=NULL)
+    {
+        temp = node;
+        node = node->next;
+        free(temp);
+        temp = NULL;
+    }
+    *head_ref = NULL;
+    return true;
+}
+
 void szp_ble_gatts_set_check_enable(bool enable)
 {
     esp_bluedroid_status_t status = esp_bluedroid_get_status();

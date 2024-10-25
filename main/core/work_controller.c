@@ -104,7 +104,7 @@ void szp_work_ble_gatts_char_write_callback(uint16_t uuid, const char *value)
             break;
     }
 }
-//GATTS开启
+//GATTS开启(后续建议改为Protocol Buffer,减少charID)
 static void szp_work_ble_gatts_start()
 {
     //先注册char和设置回调

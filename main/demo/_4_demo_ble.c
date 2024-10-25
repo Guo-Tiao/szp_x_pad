@@ -92,18 +92,24 @@ void _4_demo_ble_run(void)
     while (1)
     {
         vTaskDelay(pdMS_TO_TICKS(10));
-        uint32_t event= szp_key_wait_event(EV_SZP_KEY_CLICKED|EV_SZP_KEY_DOUBLE_CLICKED, pdTRUE, portMAX_DELAY);
+        uint32_t event= szp_key_wait_event(EV_SZP_KEY_CLICKED|EV_SZP_KEY_DOUBLE_CLICKED|EV_SZP_KEY_LONG_HOLDING, pdTRUE, portMAX_DELAY);
 
         printf("event:%"PRId32"\r\n", event);
-        if(event==3||event==2)
+        if(event&EV_SZP_KEY_CLICKED)
         {
            esp_err_t ret=  szp_ble_gatts_start();
            printf("szp_ble_gatts_start:%d\r\n", ret);
         }
-          if(event==5)
+          if(event&EV_SZP_KEY_DOUBLE_CLICKED)
         {
             esp_err_t ret= szp_ble_gatts_stop();
                printf("szp_ble_gatts_stop:%d\r\n", ret);
+               szp_ble_gatts_del_all_char();
+        }
+        if(event&EV_SZP_KEY_LONG_HOLDING)
+        {
+            printf("EV_SZP_KEY_LONG_HOLDING\r\n");
+            szp_ble_gatts_register();
         }
         
     }

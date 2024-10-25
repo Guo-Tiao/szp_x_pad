@@ -49,6 +49,7 @@ esp_err_t szp_ble_gatts_stop(void);
 void szp_ble_gatts_register_char_cb(szp_ble_gatts_char_cb_t char_cb);
 //添加服务的char/descr
 bool szp_ble_gatts_add_char(szp_gatts_char_descr char_descr);
-
+//删除所有char
+bool szp_ble_gatts_del_all_char();
 //监控设置(开启则在1分钟内无连接则关闭gatts) 注:开启时需要修改sdkconfig中的BTC Task的栈大小
 void szp_ble_gatts_set_check_enable(bool enable);
