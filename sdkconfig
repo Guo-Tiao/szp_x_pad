@@ -403,6 +403,7 @@ CONFIG_PARTITION_TABLE_MD5=y
 # 项目定义
 #
 # CONFIG_USE_SZP_ESP_ERR_CHECK is not set
+# CONFIG_ENABLE_SZP_IOT is not set
 # end of 项目定义
 
 #

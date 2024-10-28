@@ -12,6 +12,9 @@ menu "Szp Project Config"
         config USE_SZP_ESP_ERR_CHECK
             bool "使用自定义ESP_ERR_CHECK"
             default n
+        config ENABLE_SZP_IOT    
+            bool "使能物联网(开启WIFI和蓝牙)"
+            default n    
     endmenu
 
     #扩展接口配置项

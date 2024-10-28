@@ -17,22 +17,27 @@ void app_core_init()
    drv_init();
    //传感器初始化
    szp_sensor_init();
-   //音频初始化 
-/*TODO*/
    //存储初始化
    storage_init();
-   //网络初始化
-   network_init();
    //界面(LVGL)初始化
    szp_lvgl_init();
+#if CONFIG_ENABLE_SZP_IOT
+   //网络初始化
+   network_init();
+#endif
    //工作控制器初始化
    szp_work_init();
+
 }
 
 extern void ui_main_setup();//ui测试
 void app_core_run(void)
 {
    ui_main_setup();
+//项目运行
+
+
+
    for (;;)
    {
       vTaskDelay(SZP_MS_TO_TICK(10));

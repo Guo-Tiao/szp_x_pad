@@ -205,9 +205,11 @@ static void szp_work_network_start()
 
 void szp_work_init()
 {
+#if CONFIG_ENABLE_SZP_IOT
     //开启蓝牙服务
     szp_work_ble_gatts_start();
     //开启网络服务
     szp_work_network_start();
+#endif
 
 }
