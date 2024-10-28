@@ -442,6 +442,12 @@ CONFIG_SZP_WIFI_SSID=""
 CONFIG_SZP_WIFI_PASSWORD=""
 CONFIG_SZP_WIFI_RETRY_COUNT=3
 # end of WIFI连接
+
+#
+# MQTT配置
+#
+# CONFIG_USE_SZP_MQTT is not set
+# end of MQTT配置
 # end of 网络配置
 # end of Szp Project Config
 

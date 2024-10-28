@@ -4,6 +4,7 @@
 #include <inttypes.h>
 #include <math.h>
 #include "szp_sensor_manager.h"
+#include "common_macro.h"
 
 //温湿度传感器
 SensorThGxhtc3 szp_sensor_th_gxhtc3;
@@ -44,7 +45,7 @@ esp_err_t sensor_th_gxhtc3_read_id()
     i2c_master_write_byte(cmd, 0xC8, true);
     i2c_master_stop(cmd);
 
-    ret = i2c_master_cmd_begin(SZP_I2C_NUM, cmd, pdMS_TO_TICKS(1000));
+    ret = i2c_master_cmd_begin(SZP_I2C_NUM, cmd, SZP_MS_TO_TICK(1000));
     if (ret != ESP_OK) 
     {
         i2c_cmd_link_delete(cmd);
@@ -57,7 +58,7 @@ esp_err_t sensor_th_gxhtc3_read_id()
     i2c_master_read(cmd, data, 3, I2C_MASTER_LAST_NACK);
     i2c_master_stop(cmd);
 
-    ret = i2c_master_cmd_begin(SZP_I2C_NUM, cmd, pdMS_TO_TICKS(1000));
+    ret = i2c_master_cmd_begin(SZP_I2C_NUM, cmd, SZP_MS_TO_TICK(1000));
 
     if(data[2]!=gxhtc3_calc_crc(data,2))
     {     
@@ -82,7 +83,7 @@ esp_err_t gxhtc3_sleep(void)
     i2c_master_write_byte(cmd, 0xB0, true);
     i2c_master_write_byte(cmd, 0x98, true);
     i2c_master_stop(cmd);
-    ret = i2c_master_cmd_begin(SZP_I2C_NUM, cmd, pdMS_TO_TICKS(1000));
+    ret = i2c_master_cmd_begin(SZP_I2C_NUM, cmd, SZP_MS_TO_TICK(1000));
     i2c_cmd_link_delete(cmd);
     return ret;
 }
@@ -98,7 +99,7 @@ esp_err_t gxhtc3_wake_up(void)
     i2c_master_write_byte(cmd, 0x35, true);
     i2c_master_write_byte(cmd, 0x17, true);
     i2c_master_stop(cmd);
-    ret = i2c_master_cmd_begin(SZP_I2C_NUM, cmd, pdMS_TO_TICKS(1000));
+    ret = i2c_master_cmd_begin(SZP_I2C_NUM, cmd, SZP_MS_TO_TICK(1000));
     i2c_cmd_link_delete(cmd);
     return ret;
 }
@@ -114,7 +115,7 @@ esp_err_t gxhtc3_measure(void)
     i2c_master_write_byte(cmd, 0x7c, true);
     i2c_master_write_byte(cmd, 0xa2, true);
     i2c_master_stop(cmd);
-    ret = i2c_master_cmd_begin(SZP_I2C_NUM, cmd,  pdMS_TO_TICKS(1000));
+    ret = i2c_master_cmd_begin(SZP_I2C_NUM, cmd,  SZP_MS_TO_TICK(1000));
     i2c_cmd_link_delete(cmd);
     return ret;
 }
@@ -129,7 +130,7 @@ esp_err_t gxhtc3_read_tah(void)
     i2c_master_write_byte(cmd, 0x70 << 1 | I2C_MASTER_READ, true);
     i2c_master_read(cmd, gxhtc3_tah_data, 6, I2C_MASTER_LAST_NACK);
     i2c_master_stop(cmd);
-    ret = i2c_master_cmd_begin(SZP_I2C_NUM, cmd,pdMS_TO_TICKS(1000));
+    ret = i2c_master_cmd_begin(SZP_I2C_NUM, cmd,SZP_MS_TO_TICK(1000));
     i2c_cmd_link_delete(cmd);
     return ret;
 }
@@ -139,7 +140,7 @@ esp_err_t sensor_th_gxhtc3_update()
     esp_err_t ret;
     gxhtc3_wake_up();
     gxhtc3_measure();
-    vTaskDelay(pdMS_TO_TICKS(20));
+    vTaskDelay(SZP_MS_TO_TICK(20));
     gxhtc3_read_tah();
     gxhtc3_sleep();
 

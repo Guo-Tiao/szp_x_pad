@@ -5,6 +5,13 @@
 #include "szp_config_def.h"
 
 #include "string.h"
+#include "esp_log.h"
+
+
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+
+#define SZP_WORK_TAG               "SZP_WORK"     //日志使用的TAG
 
 /******************************************* BLE-GATTS *******************************************/
 
@@ -96,7 +103,7 @@ void szp_work_ble_gatts_char_write_callback(uint16_t uuid, const char *value)
             else if(state==1)
             {
                 uint8_t val = 1;
-                esp_err_t ret= szp_nvs_write_blob(Nvs_NameSpace_App, Nvs_Key_Wifi_AutoConnect, &val, 1);
+                szp_nvs_write_blob(Nvs_NameSpace_App, Nvs_Key_Wifi_AutoConnect, &val, 1);
             }
         }
         break;
@@ -185,7 +192,13 @@ static void szp_work_network_start()
     size_t read_len= szp_nvs_read_blob(Nvs_NameSpace_App, Nvs_Key_Wifi_AutoConnect, &wifi_auto_connect, 1);
     if(read_len==0) szp_nvs_write_blob(Nvs_NameSpace_App, Nvs_Key_Wifi_AutoConnect, &wifi_auto_connect, 1);
     if(wifi_auto_connect)   network_wifi_connect();
-
+    //启动MQTT
+#if CONFIG_USE_SZP_MQTT
+    if(wifi_auto_connect)
+    {
+        network_start_mqtt_task();
+    }
+#endif
 }
 /******************************************* Networkl *******************************************/
 

@@ -7,7 +7,7 @@
 #include "driver/gpio.h"
 
 #include "freertos/queue.h"
-
+#include "common_macro.h"
 
 // for uart_1
 static const int RX_BUF_SIZE = 1024;
@@ -42,7 +42,7 @@ static void rx_task(void *arg)
 
     while (1)
     {
-        const int rxBytes = uart_read_bytes(UART_NUM_1, data, RX_BUF_SIZE, pdMS_TO_TICKS(1000)); // important 重要函数 接收
+        const int rxBytes = uart_read_bytes(UART_NUM_1, data, RX_BUF_SIZE, SZP_MS_TO_TICK(1000)); // important 重要函数 接收
         if (rxBytes > 0)
         {
             data[rxBytes] = 0;

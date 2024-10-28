@@ -6,6 +6,7 @@
 #include "szp_sensor_manager.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "common_macro.h"
 
 //地磁传感器
 SensorMgQmc5883L szp_sensor_mg_qmc5883l;
@@ -33,13 +34,13 @@ enum qmc5883l_reg
 
 esp_err_t qmc5883L_register_read(uint8_t reg_addr, uint8_t *data, size_t len)
 {
-    return i2c_master_write_read_device(SZP_I2C_NUM, QMC5883L_SENSOR_ADDR,  &reg_addr, 1, data, len, pdMS_TO_TICKS(SZP_I2C_TIMEOUT_MS));
+    return i2c_master_write_read_device(SZP_I2C_NUM, QMC5883L_SENSOR_ADDR,  &reg_addr, 1, data, len, SZP_MS_TO_TICK(SZP_I2C_TIMEOUT_MS));
 }
 
 esp_err_t qmc5883L_register_write_byte(uint8_t reg_addr, uint8_t data)
 {
     uint8_t write_buf[2] = {reg_addr, data};
-    return i2c_master_write_to_device(SZP_I2C_NUM, QMC5883L_SENSOR_ADDR, write_buf, sizeof(write_buf), pdMS_TO_TICKS(SZP_I2C_TIMEOUT_MS));
+    return i2c_master_write_to_device(SZP_I2C_NUM, QMC5883L_SENSOR_ADDR, write_buf, sizeof(write_buf), SZP_MS_TO_TICK(SZP_I2C_TIMEOUT_MS));
 }
 
 
@@ -80,10 +81,10 @@ void sensor_th_qmc5883l_init(void)
     while (id != 0xff)  // 确定ID号是否正确
     {
         qmc5883L_register_read(QMC5883L_CHIPID, &id ,1);
-        vTaskDelay(pdMS_TO_TICKS(500));
+        vTaskDelay(SZP_MS_TO_TICK(500));
     }
     qmc5883L_register_write_byte(QMC5883L_CTRL2, 0x80); // 复位芯片 
-    vTaskDelay(pdMS_TO_TICKS(10));
+    vTaskDelay(SZP_MS_TO_TICK(10));
     qmc5883L_register_write_byte(QMC5883L_CTRL1, 0x05); //Continuous模式 50Hz 
     qmc5883L_register_write_byte(QMC5883L_CTRL2, 0x00); 
     qmc5883L_register_write_byte(QMC5883L_FBR, 0x01); 

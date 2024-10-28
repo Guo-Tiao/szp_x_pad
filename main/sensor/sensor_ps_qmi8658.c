@@ -5,6 +5,7 @@
 #include <math.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "common_macro.h"
 
 //姿态传感器
 SensorPsQmi8658c szp_sensor_ps_qmi8658c;
@@ -88,13 +89,13 @@ enum qmi8658c_reg
 //寄存器读取
 esp_err_t qmi8658c_register_read(uint8_t reg_addr, uint8_t *data, size_t len)
 {
-    return i2c_master_write_read_device(SZP_I2C_NUM, QMI8658C_SENSOR_ADDR,  &reg_addr, 1, data, len, pdMS_TO_TICKS(SZP_I2C_TIMEOUT_MS));
+    return i2c_master_write_read_device(SZP_I2C_NUM, QMI8658C_SENSOR_ADDR,  &reg_addr, 1, data, len, SZP_MS_TO_TICK(SZP_I2C_TIMEOUT_MS));
 }
 //寄存器写入
 esp_err_t qmi8658c_register_write_byte(uint8_t reg_addr, uint8_t data)
 {
     uint8_t write_buf[2] = {reg_addr, data};
-    return i2c_master_write_to_device(SZP_I2C_NUM, QMI8658C_SENSOR_ADDR, write_buf, sizeof(write_buf), pdMS_TO_TICKS(SZP_I2C_TIMEOUT_MS));
+    return i2c_master_write_to_device(SZP_I2C_NUM, QMI8658C_SENSOR_ADDR, write_buf, sizeof(write_buf), SZP_MS_TO_TICK(SZP_I2C_TIMEOUT_MS));
 }
 
 
@@ -149,10 +150,10 @@ void sensor_qs_qmi8658c_init(void)
     while (id != 0x05)
     {
         qmi8658c_register_read(QMI8658C_WHO_AM_I, &id ,1);
-        vTaskDelay(pdMS_TO_TICKS(10));
+        vTaskDelay(SZP_MS_TO_TICK(10));
     }
     qmi8658c_register_write_byte(QMI8658C_RESET, 0xb0);  // 复位
-    vTaskDelay(pdMS_TO_TICKS(10));
+    vTaskDelay(SZP_MS_TO_TICK(10));
     qmi8658c_register_write_byte(QMI8658C_CTRL1, 0x40); // CTRL1 设置地址自动增加
     qmi8658c_register_write_byte(QMI8658C_CTRL7, 0x03); // CTRL7 允许加速度和陀螺仪
     qmi8658c_register_write_byte(QMI8658C_CTRL2, 0x95); // CTRL2 设置ACC 4g 250Hz

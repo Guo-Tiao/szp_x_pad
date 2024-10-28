@@ -85,6 +85,7 @@
         "utility": "c",
         "szp_ble_gatts.h": "c",
         "esp_timer.h": "c",
-        "szp_config_def.h": "c"
+        "szp_config_def.h": "c",
+        "szp_mqtt.h": "c"
     }
 }

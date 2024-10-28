@@ -24,4 +24,4 @@ typedef enum e_szp_key_event
 //实战派用户按钮初始化
 void szp_key_init(void);
 //实战派事件等待
-uint32_t szp_key_wait_event(SzpKeyEvent  evnet,uint8_t clearbit,uint32_t waitTime);
+uint32_t szp_key_wait_event(SzpKeyEvent  evnet,uint8_t clearbit,uint32_t waitTimeMs);

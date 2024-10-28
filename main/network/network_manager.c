@@ -4,6 +4,11 @@
 #include "string.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/event_groups.h"
+#include "common_macro.h"
+
+#include "esp_log.h"
+
+#define SZP_NETWORK_TAG         "SZP_NETWORK"
 
 #define DEFAULT_SZP_WIFI_SSID                       CONFIG_SZP_WIFI_SSID
 #define DEFAULT_SZP_WIFI_PASSWORD           CONFIG_SZP_WIFI_PASSWORD
@@ -109,17 +114,23 @@ esp_err_t network_wifi_disconnect()
 }
 
 
-uint32_t network_wait_wifi_event(SzpWifiStateEvent evnet, uint32_t waitTime)
+uint32_t network_wait_wifi_event(SzpWifiStateEvent evnet, uint32_t waitTimeMs)
 {
     if(!event_group_szp_wifi)
     {
         return 0;
     }
+    TickType_t time=waitTimeMs;
+    if(waitTimeMs!=SZP_WAIT_FOR_INFINITE)   //非永久则转换为TICK
+    {
+        time = SZP_MS_TO_TICK(waitTimeMs);
+    }
+
     return xEventGroupWaitBits(event_group_szp_wifi,
                                (EventBits_t)evnet,
-                               (BaseType_t)pdTRUE,
-                               (BaseType_t)pdFALSE,
-                               (TickType_t)waitTime);
+                               (BaseType_t)SZP_OS_TRUE,
+                               (BaseType_t)SZP_OS_FALSE,
+                               (TickType_t)time);
 
 }
 
@@ -127,3 +138,44 @@ SzpWifiStateEvent network_wifi_current_state()
 {
     return network_current_wifi_state;
 }
+#if CONFIG_USE_SZP_MQTT
+#include "szp_mqtt.h"
+//线程等待wifi 开启mqtt
+static void task_network_mqtt_start()
+{
+    bool is_wifi_connect = false;
+    //wifi未连接进入等待
+    if(network_wifi_current_state()!=EV_SZP_WIFI_CONNECT_SUCCESS)
+    {
+        uint32_t event = network_wait_wifi_event(EV_SZP_WIFI_CONNECT_SUCCESS, 60 * 1000); // 等待一分钟
+        if (event & EV_SZP_WIFI_CONNECT_SUCCESS)
+        {
+            is_wifi_connect = true;
+        }
+    }
+    else
+    {
+        is_wifi_connect = true;
+    }
+    if(is_wifi_connect)
+    {
+        esp_err_t ret = szp_mqtt_start();
+        if(ret!=ESP_OK)
+        {
+            ESP_LOGE(SZP_NETWORK_TAG,"启动MQTT服务失败,ret=0x%x",ret);
+        }
+    }
+    else
+    {
+        ESP_LOGE(SZP_NETWORK_TAG,"wifi未连接,启动MQTT服务失败");
+    }
+    vTaskDelete(NULL);
+}
+
+void network_start_mqtt_task()
+{
+    xTaskCreate(task_network_mqtt_start, "task_network_mqtt_start", 4096, NULL, 5, NULL);
+}
+
+
+#endif

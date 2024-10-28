@@ -2,6 +2,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_log.h"
+#include "common_macro.h"
 
 static void periodic_timer_callback(void* arg)
 {
@@ -22,6 +23,6 @@ void _4_demo_timer_run(void)
 
     while (1)
     {
-        vTaskDelay(pdMS_TO_TICKS(10));
+        vTaskDelay(SZP_MS_TO_TICK(10));
     }
 }

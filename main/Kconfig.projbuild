@@ -97,6 +97,28 @@ menu "Szp Project Config"
                 int "WiFi重连次数"
                 default 3
         endmenu
+         menu "MQTT配置"
+            config USE_SZP_MQTT
+                bool "使用MQTT"
+                default n
+            if USE_SZP_MQTT
+                config SZP_MQTT_BROKER_URI
+                        string "Mqtt Broker Url"
+                        default ""
+                config SZP_MQTT_BROKER_PORK
+                        int "Mqtt Borker 端口"
+                        default 0
+                config SZP_MQTT_CLIENT_ID
+                            string "Mqtt 客户端 ID"
+                            default ""    
+                config SZP_MQTT_CLIENT_USERNAME
+                            string "Mqtt 客户端 用户名"
+                            default ""   
+                config SZP_MQTT_CLIENT_PASSWORD
+                        string "Mqtt 客户端 密码"
+                        default ""   
+            endif
+        endmenu
     endmenu
 
 endmenu

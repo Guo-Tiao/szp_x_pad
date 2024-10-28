@@ -55,7 +55,7 @@ int szp_uart_receive_data(char *data, uint32_t len,uint16_t waitMs)
     {
         return 0;
     }
-    int bytes= uart_read_bytes(SZP_UART_NUM, data, len, pdMS_TO_TICKS(waitMs));
+    int bytes= uart_read_bytes(SZP_UART_NUM, data, len, SZP_MS_TO_TICK(waitMs));
      if (bytes > 0)
     {
         data[bytes] = 0;

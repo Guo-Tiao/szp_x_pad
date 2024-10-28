@@ -1,6 +1,6 @@
 #pragma once
 #include "esp_err.h"
-
+#include "sdkconfig.h"
 
 //NVS配置
 #define Nvs_NameSpace_Network     "network"                 //网络命名空间
@@ -36,7 +36,15 @@ typedef enum
 } SzpWifiStateEvent;
 
 //实战派WIFI事件等待
-uint32_t network_wait_wifi_event(SzpWifiStateEvent  evnet,uint32_t waitTime);
+uint32_t network_wait_wifi_event(SzpWifiStateEvent  evnet,uint32_t waitTimeMs);
 
 //获取当前wifi时间状态
 SzpWifiStateEvent network_wifi_current_state();
+
+
+/*************** mqtt操作 ***************/
+
+#if CONFIG_USE_SZP_MQTT
+//开启MQTT连接任务
+void network_start_mqtt_task();
+#endif

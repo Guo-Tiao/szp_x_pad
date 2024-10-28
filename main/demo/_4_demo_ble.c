@@ -91,8 +91,8 @@ void _4_demo_ble_run(void)
 
     while (1)
     {
-        vTaskDelay(pdMS_TO_TICKS(10));
-        uint32_t event= szp_key_wait_event(EV_SZP_KEY_CLICKED|EV_SZP_KEY_DOUBLE_CLICKED|EV_SZP_KEY_LONG_HOLDING, pdTRUE, portMAX_DELAY);
+        vTaskDelay(SZP_MS_TO_TICK(10));
+        uint32_t event= szp_key_wait_event(EV_SZP_KEY_CLICKED|EV_SZP_KEY_DOUBLE_CLICKED|EV_SZP_KEY_LONG_HOLDING, SZP_OS_TRUE, SZP_WAIT_FOR_INFINITE);
 
         printf("event:%"PRId32"\r\n", event);
         if(event&EV_SZP_KEY_CLICKED)

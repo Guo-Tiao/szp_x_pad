@@ -1,4 +1,5 @@
 #include "szp_x_pad.h"
+#include "common_macro.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "inttypes.h"
@@ -34,7 +35,7 @@ void app_core_run(void)
    ui_main_setup();
    for (;;)
    {
-      vTaskDelay(pdMS_TO_TICKS(10));
+      vTaskDelay(SZP_MS_TO_TICK(10));
       szp_lvgl_timer_handler();
    }
 }

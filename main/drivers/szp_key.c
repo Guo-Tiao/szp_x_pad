@@ -101,7 +101,7 @@ static void szp_key_monitor_task(void *params)
     { 
          if(xQueueReceive(szp_key_monitor_evt_queue, &io_num, portMAX_DELAY)) 
         {
-            TickType_t current_time = pdTICKS_TO_MS(xTaskGetTickCount());//获取按下的时间ms记为上次ms
+            TickType_t current_time = SZP_TICK_TO_MS(xTaskGetTickCount());//获取按下的时间ms记为上次ms
             //初始化状态    
             _szp_key_.state = PressDown;
             _szp_key_.current_level = SZP_KEY_PRESSING_LEVEL;
@@ -118,10 +118,10 @@ static void szp_key_monitor_task(void *params)
                 //进入检测阶段
                 while (1)
                 {
-                    vTaskDelay(pdMS_TO_TICKS(SZP_KEY_MONITOR_TASK_DELAY));
+                    vTaskDelay(SZP_MS_TO_TICK(SZP_KEY_MONITOR_TASK_DELAY));
                     _szp_key_.last_level = _szp_key_.current_level;//保存上一个电平状态
                     _szp_key_.current_level = gpio_get_level(SZP_KEY_NUM); //获取按键状态
-                    current_time = pdTICKS_TO_MS(xTaskGetTickCount());   // 获取当前计时
+                    current_time = SZP_TICK_TO_MS(xTaskGetTickCount());   // 获取当前计时
 
                     
                     switch (_szp_key_.state)
@@ -261,12 +261,18 @@ void szp_key_init(void)
 
 }
 
-uint32_t szp_key_wait_event(SzpKeyEvent evnet, uint8_t clearbit, uint32_t waitTime)
+uint32_t szp_key_wait_event(SzpKeyEvent evnet, uint8_t clearbit, uint32_t waitTimeMs)
 {
+    TickType_t time=waitTimeMs;
+    if(waitTimeMs!=SZP_WAIT_FOR_INFINITE)   //非永久则转换为TICK
+    {
+        time = SZP_MS_TO_TICK(waitTimeMs);
+    }
+
     uint32_t event_bit= xEventGroupWaitBits(event_group_szp_key,
                                (EventBits_t)evnet,
                                (BaseType_t)clearbit,
-                               (BaseType_t)pdFALSE,
-                               (TickType_t)waitTime);
+                               (BaseType_t)SZP_OS_FALSE,
+                               (TickType_t)time);
     return event_bit;
 }

@@ -180,7 +180,7 @@ static void szp_ble_gatts_check_timer_callback(TimerHandle_t handle)
        
         TickType_t current_time =  xTaskGetTickCount();
         TickType_t disconnect_time = current_time - szp_ble_gatts_check_time.szp_ble_gatts_current_disconnect_time;//未连接时间时长
-        TickType_t disconnect_time_ms=pdTICKS_TO_MS(disconnect_time);
+        TickType_t disconnect_time_ms=SZP_TICK_TO_MS(disconnect_time);
         if(disconnect_time_ms>SZP_BLE_GATTS_LOST_CONNECT_TIME_S*1000)
         {
             ESP_LOGI(SZP_GATTS_TAG, "蓝牙超时未有客户端连接,自动关闭");
@@ -616,8 +616,8 @@ esp_err_t szp_ble_gatts_start(void)
     {
         szp_ble_gatts_check_timer_handle=xTimerCreate(
             "szp_ble_gatts_check_timer", 
-            pdMS_TO_TICKS(1000), 
-            pdTRUE, 
+            SZP_MS_TO_TICK(1000), 
+            SZP_OS_TRUE, 
             (void *)SZP_BLE_GATTS_CHECK_TIMER_ID, 
             szp_ble_gatts_check_timer_callback);
     }
