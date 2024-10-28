@@ -34,10 +34,6 @@ extern void ui_main_setup();//ui测试
 void app_core_run(void)
 {
    ui_main_setup();
-//项目运行
-
-
-
    for (;;)
    {
       vTaskDelay(SZP_MS_TO_TICK(10));

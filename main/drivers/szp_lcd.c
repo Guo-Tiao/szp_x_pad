@@ -14,6 +14,7 @@
 #include "esp_timer.h"
 #include "esp_heap_caps.h"
 
+
 szp_lcd_on_flush_ready_cb on_szp_lcd_on_flush_ready_cb;
 esp_lcd_panel_handle_t szp_lcd_panel_handle = NULL;
 //屏幕IO
@@ -93,7 +94,12 @@ esp_err_t szp_lcd_init(void)
     //LCD画板初始化
     SZP_ESP_ERR_CHECK(esp_lcd_panel_reset(szp_lcd_panel_handle));
     SZP_ESP_ERR_CHECK(esp_lcd_panel_init(szp_lcd_panel_handle));
+#if CONFIG_SZP_LVGL_VER_DISP
     SZP_ESP_ERR_CHECK(esp_lcd_panel_mirror(szp_lcd_panel_handle, false, false));
+#else
+    SZP_ESP_ERR_CHECK(esp_lcd_panel_swap_xy(szp_lcd_panel_handle,true));
+    SZP_ESP_ERR_CHECK(esp_lcd_panel_mirror(szp_lcd_panel_handle, true, false));
+#endif
     SZP_ESP_ERR_CHECK(esp_lcd_panel_invert_color(szp_lcd_panel_handle, true));
     SZP_ESP_ERR_CHECK(esp_lcd_panel_disp_on_off(szp_lcd_panel_handle, true));
     //背光初始化

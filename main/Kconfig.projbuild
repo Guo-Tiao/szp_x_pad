@@ -15,6 +15,9 @@ menu "Szp Project Config"
         config ENABLE_SZP_IOT    
             bool "使能物联网(开启WIFI和蓝牙)"
             default n    
+        config SZP_LVGL_VER_DISP
+            bool "使能LVGL竖屏显示"
+            default n 
     endmenu
 
     #扩展接口配置项

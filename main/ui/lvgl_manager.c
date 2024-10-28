@@ -108,7 +108,8 @@ void szp_lvgl_init(void)
     indev_drv.disp = szp_lvgl_disp;
     indev_drv.read_cb = szp_lvgl_touch_cb;
     lv_indev_drv_register(&indev_drv);
-
+    //设置为默认屏幕
+    lv_disp_set_default(szp_lvgl_disp);
     return;
 }
 

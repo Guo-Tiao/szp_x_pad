@@ -1,6 +1,5 @@
 //实战派主界面
 #include "lvgl.h"
-#include "lvgl_manager.h"
 
 static lv_obj_t *meter;
 static lv_obj_t * btn;
@@ -19,7 +18,7 @@ static void ui_btn_clicked_cb(lv_event_t * e)
  
 void ui_main_setup()
 {
-    lv_obj_t *scr = szp_lvgl_get_scr_act();
+    lv_obj_t *scr = lv_scr_act();
     meter = lv_meter_create(scr);
     lv_obj_center(meter);
     lv_obj_set_size(meter, 200, 200);

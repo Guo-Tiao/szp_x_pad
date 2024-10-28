@@ -3,6 +3,8 @@
 #include "common_macro.h"
 
 #include "szp_lcd.h"
+#include "sdkconfig.h"
+
 esp_lcd_touch_handle_t szp_touch_handle = NULL;
 esp_err_t szp_touch_init(void)
 {
@@ -11,15 +13,27 @@ esp_err_t szp_touch_init(void)
     esp_lcd_panel_io_i2c_config_t tp_io_config = ESP_LCD_TOUCH_IO_I2C_FT5x06_CONFIG();
     esp_lcd_touch_config_t tp_cfg = 
     {
-        .x_max = SZP_LCD_H_RES,
-        .y_max = SZP_LCD_V_RES,
-        .rst_gpio_num = -1,
-        .int_gpio_num = -1,
-        .flags = {
+
+#if CONFIG_SZP_LVGL_VER_DISP
+    .x_max = SZP_LCD_H_RES,
+    .y_max = SZP_LCD_V_RES,
+    .flags = {
             .swap_xy = 0,                                           
             .mirror_x = 0,
             .mirror_y = 0,
         },
+#else
+    .x_max =SZP_LCD_V_RES ,
+    .y_max = SZP_LCD_H_RES,
+    .flags = {
+            .swap_xy = 1,                                           
+            .mirror_x = 1,
+            .mirror_y = 0,
+        },
+#endif
+        .rst_gpio_num = -1,
+        .int_gpio_num = -1,
+     
     };
     SZP_ESP_ERR_CHECK(esp_lcd_touch_new_i2c_ft5x06(tp_io_handle, &tp_cfg,&szp_touch_handle));
     
