@@ -33,6 +33,10 @@ void network_init(void)
         event_group_szp_wifi = xEventGroupCreate();
     }
     network_current_wifi_state = EV_SZP_WIFI_CONNECT_FAIL;
+
+    //时间设置:设置为东八区
+    setenv("TZ", "CST-8", 1);
+    tzset();
 }
 
 static void cb_szp_network_wifi_event(SzpWifiConnectEvent e)
@@ -198,7 +202,7 @@ static void task_network_sntp_get_time(void *arg)
     {
         ESP_LOGI(SZP_NETWORK_TAG,"当前已获取实时时间,无需SNTP授时,当前时间:%d-%d-%d %d:%d:%d",
                      time_info.tm_year+1900, time_info.tm_mon+1, time_info.tm_mday,
-                     time_info.tm_hour+8, time_info.tm_min, time_info.tm_sec);
+                     time_info.tm_hour, time_info.tm_min, time_info.tm_sec);
         vTaskDelete(NULL);
         return;
     }
@@ -237,7 +241,7 @@ static void task_network_sntp_get_time(void *arg)
             localtime_r(&now, &time_info);
             ESP_LOGI(SZP_NETWORK_TAG, "SNTP授时成功,当前时间:%d-%d-%d %d:%d:%d",
                      time_info.tm_year+1900, time_info.tm_mon+1, time_info.tm_mday,
-                     time_info.tm_hour+8, time_info.tm_min, time_info.tm_sec);
+                     time_info.tm_hour, time_info.tm_min, time_info.tm_sec);
         }
         else//授时失败
         {
