@@ -14,6 +14,10 @@ static void ui_btn_clicked_cb(lv_event_t * e)
  {
      printf("ui_btn_clicked_cb\r\n");
  }
+static void ui_btn_long_press_cb(lv_event_t * e)
+ {
+     printf("ui_btn_long_press_cb\r\n");
+ }
 
  
 void ui_main_setup()
@@ -58,6 +62,7 @@ void ui_main_setup()
     lv_label_set_text_static(lbl, LV_SYMBOL_REFRESH" ROTATE");
     lv_obj_align(btn, LV_ALIGN_BOTTOM_LEFT, 30, -30);
     lv_obj_add_event_cb(btn, ui_btn_clicked_cb, LV_EVENT_CLICKED, NULL);
+    lv_obj_add_event_cb(btn, ui_btn_long_press_cb, LV_EVENT_LONG_PRESSED, NULL);
 
     /*Create an animation to set the value*/
     lv_anim_t a;

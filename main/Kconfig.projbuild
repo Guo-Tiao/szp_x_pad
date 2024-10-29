@@ -103,7 +103,7 @@ menu "Szp Project Config"
                 int "WiFi重连次数"
                 default 3
         endmenu
-         menu "MQTT配置"
+        menu "MQTT配置"
             config USE_SZP_MQTT
                 bool "使用MQTT"
                 default n
@@ -124,6 +124,11 @@ menu "Szp Project Config"
                         string "Mqtt 客户端 密码"
                         default ""   
             endif
+        endmenu
+        menu "服务配置"
+            config SZP_SNTP_SERVER_URI
+                string "SNTP授时地址"
+                default "pool.ntp.org"
         endmenu
     endmenu
 

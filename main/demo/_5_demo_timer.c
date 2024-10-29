@@ -10,7 +10,7 @@ static void periodic_timer_callback(void* arg)
     ESP_LOGI("DEMO_TIMER", "Periodic timer called, time since boot: %lld us", time_since_boot);
 }
 
-void _4_demo_timer_run(void)
+void _5_demo_timer_run(void)
 {
     const esp_timer_create_args_t periodic_timer_args = {
             .callback = &periodic_timer_callback,

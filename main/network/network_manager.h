@@ -48,3 +48,5 @@ SzpWifiStateEvent network_wifi_current_state();
 //开启MQTT连接任务
 void network_start_mqtt_task();
 #endif
+//开启SNTP授时任务
+void network_start_sntp_task();

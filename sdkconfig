@@ -450,6 +450,12 @@ CONFIG_SZP_WIFI_RETRY_COUNT=3
 #
 # CONFIG_USE_SZP_MQTT is not set
 # end of MQTT配置
+
+#
+# 服务配置
+#
+CONFIG_SZP_SNTP_SERVER_URI="pool.ntp.org"
+# end of 服务配置
 # end of 网络配置
 # end of Szp Project Config
 
@@ -1964,6 +1970,13 @@ CONFIG_WIFI_PROV_STA_ALL_CHANNEL_SCAN=y
 # end of Wi-Fi Provisioning Manager
 
 #
+# ESP LCD TOUCH
+#
+CONFIG_ESP_LCD_TOUCH_MAX_POINTS=5
+CONFIG_ESP_LCD_TOUCH_MAX_BUTTONS=1
+# end of ESP LCD TOUCH
+
+#
 # LVGL configuration
 #
 CONFIG_LV_CONF_SKIP=y
@@ -2267,13 +2280,6 @@ CONFIG_LV_BUILD_EXAMPLES=y
 # CONFIG_LV_USE_DEMO_MUSIC is not set
 # end of Demos
 # end of LVGL configuration
-
-#
-# ESP LCD TOUCH
-#
-CONFIG_ESP_LCD_TOUCH_MAX_POINTS=5
-CONFIG_ESP_LCD_TOUCH_MAX_BUTTONS=1
-# end of ESP LCD TOUCH
 # end of Component config
 
 # CONFIG_IDF_EXPERIMENTAL_FEATURES is not set

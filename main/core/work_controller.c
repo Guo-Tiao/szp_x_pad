@@ -199,6 +199,8 @@ static void szp_work_network_start()
         network_start_mqtt_task();
     }
 #endif
+    //开启SNTP授时
+    network_start_sntp_task();
 }
 /******************************************* Networkl *******************************************/
 
