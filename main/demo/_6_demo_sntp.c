@@ -10,9 +10,9 @@
 #include "lwip/ip_addr.h"
 #include "esp_sntp.h"
 #include "esp_log.h"
-#include "work_controller.h"
-#include "network_manager.h"
-#include "storage_manager.h"
+#include "core/work_controller.h"
+#include "network/network_manager.h"
+#include "storage/storage_manager.h"
 
 #include <stdio.h>
 #include <stdlib.h>

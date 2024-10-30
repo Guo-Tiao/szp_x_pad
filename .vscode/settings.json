@@ -88,6 +88,9 @@
         "szp_config_def.h": "c",
         "szp_mqtt.h": "c",
         "time.h": "c",
-        "work_controller.h": "c"
+        "work_controller.h": "c",
+        "szp_x_pad.h": "c",
+        "esp_netif_sntp.h": "c",
+        "esp_heap_caps.h": "c"
     }
 }

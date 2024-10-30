@@ -1,10 +1,11 @@
 #include "szp_sensor_def.h"
-#include "szp_i2c.h"
 #include "driver/i2c.h"
 #include <inttypes.h>
 #include <math.h>
 #include "szp_sensor_manager.h"
-#include "common_macro.h"
+
+#include "drivers/szp_i2c.h"
+#include "common/common_macro.h"
 
 //温湿度传感器
 SensorThGxhtc3 szp_sensor_th_gxhtc3;

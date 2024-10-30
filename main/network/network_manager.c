@@ -1,10 +1,10 @@
 #include "network_manager.h"
 #include "szp_wifi.h"
-#include "storage_manager.h"
+#include "storage/storage_manager.h"
 #include "string.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/event_groups.h"
-#include "common_macro.h"
+#include "common/common_macro.h"
 #include "esp_sntp.h"
 #include "esp_netif_sntp.h"
 

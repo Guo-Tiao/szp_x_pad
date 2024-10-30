@@ -1,5 +1,5 @@
 #include "szp_key.h"
-#include "common_macro.h"
+#include "common/common_macro.h"
 #include <stdio.h>
 #include <inttypes.h>
 #include "driver/gpio.h"

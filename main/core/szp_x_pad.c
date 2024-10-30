@@ -1,14 +1,15 @@
 #include "szp_x_pad.h"
-#include "common_macro.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "inttypes.h"
-#include "drv_manager.h"
-#include "szp_sensor_manager.h"
-#include "storage_manager.h"
-#include "network_manager.h"
+
+#include "common/common_macro.h"
+#include "drivers/drv_manager.h"
+#include "sensor/szp_sensor_manager.h"
+#include "storage/storage_manager.h"
+#include "network/network_manager.h"
 #include "work_controller.h"
-#include "lvgl_manager.h"
+#include "ui/lvgl_manager.h"
 
 
 void app_core_init()

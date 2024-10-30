@@ -37,19 +37,20 @@ set(PROJECT_SOURCES
 
 #添加包含目录
 list(APPEND INC_DIR
-    ${CMAKE_CURRENT_SOURCE_DIR}/core
-    ${CMAKE_CURRENT_SOURCE_DIR}/common
-    ${CMAKE_CURRENT_SOURCE_DIR}/drivers
-    ${CMAKE_CURRENT_SOURCE_DIR}/sensor
-    ${CMAKE_CURRENT_SOURCE_DIR}/audio
-    ${CMAKE_CURRENT_SOURCE_DIR}/network
-    ${CMAKE_CURRENT_SOURCE_DIR}/bluetooth
-    ${CMAKE_CURRENT_SOURCE_DIR}/storage
-    ${CMAKE_CURRENT_SOURCE_DIR}/ui
-    ${CMAKE_CURRENT_SOURCE_DIR}/assets
-    ${CMAKE_CURRENT_SOURCE_DIR}/szp_components
-
-    ${CMAKE_CURRENT_SOURCE_DIR}/demo
+      ${CMAKE_CURRENT_SOURCE_DIR}
+      ${CMAKE_CURRENT_SOURCE_DIR}/szp_components
+      
+#    ${CMAKE_CURRENT_SOURCE_DIR}/core
+#    ${CMAKE_CURRENT_SOURCE_DIR}/common
+#    ${CMAKE_CURRENT_SOURCE_DIR}/drivers
+#    ${CMAKE_CURRENT_SOURCE_DIR}/sensor
+#    ${CMAKE_CURRENT_SOURCE_DIR}/audio
+#    ${CMAKE_CURRENT_SOURCE_DIR}/network
+#    ${CMAKE_CURRENT_SOURCE_DIR}/bluetooth
+#    ${CMAKE_CURRENT_SOURCE_DIR}/storage
+#    ${CMAKE_CURRENT_SOURCE_DIR}/ui
+#    ${CMAKE_CURRENT_SOURCE_DIR}/assets
+#    ${CMAKE_CURRENT_SOURCE_DIR}/demo   
 )
 #IDF注册
 idf_component_register(

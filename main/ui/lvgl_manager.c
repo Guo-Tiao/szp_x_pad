@@ -1,10 +1,11 @@
 #include "lvgl_manager.h"
 #include "lvgl.h"
-#include "szp_lcd.h"
-#include "szp_touch.h"
 #include "esp_timer.h"
 #include "esp_heap_caps.h"
 #include <inttypes.h>
+
+#include "drivers/szp_lcd.h"
+#include "drivers/szp_touch.h"
 
 #define SZP_LVGL_TICK_PERIOD_MS    2
 

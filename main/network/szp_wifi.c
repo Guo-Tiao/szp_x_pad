@@ -1,5 +1,5 @@
 #include "szp_wifi.h"
-#include "common_macro.h"
+#include "common/common_macro.h"
 #include <inttypes.h>
 #include <string.h>
 #include "esp_log.h"

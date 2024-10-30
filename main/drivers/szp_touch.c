@@ -1,6 +1,6 @@
 #include "szp_touch.h"
 #include "esp_lcd_touch_ft5x06/esp_lcd_touch_ft5x06.h"
-#include "common_macro.h"
+#include "common/common_macro.h"
 
 #include "szp_lcd.h"
 #include "sdkconfig.h"

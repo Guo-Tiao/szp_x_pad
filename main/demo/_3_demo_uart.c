@@ -7,7 +7,7 @@
 #include "driver/gpio.h"
 
 #include "freertos/queue.h"
-#include "common_macro.h"
+#include "common/common_macro.h"
 
 // for uart_1
 static const int RX_BUF_SIZE = 1024;

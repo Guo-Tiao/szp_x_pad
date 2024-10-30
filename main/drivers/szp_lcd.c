@@ -6,7 +6,7 @@
 #include "driver/gpio.h"
 #include "driver/spi_master.h"
 #include "driver/ledc.h"
-#include "common_macro.h"
+#include "common/common_macro.h"
 
 #include "lvgl.h"
 #include "szp_lcd.h"

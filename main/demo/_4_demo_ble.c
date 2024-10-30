@@ -11,16 +11,16 @@
 #include "esp_bt_defs.h"
 #include "esp_bt_main.h"
 #include "esp_gatt_common_api.h"
-#include "common_macro.h"
-#include "szp_ble_gatts.h"
-#include "szp_key.h"
+#include "common/common_macro.h"
+#include "bluetooth/szp_ble_gatts.h" 
+#include "drivers/szp_key.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <inttypes.h>
 
-#include "storage_manager.h"
-#include "network_manager.h"
+#include "storage/storage_manager.h"
+#include "network/network_manager.h"
 
 //CHAR读回调测试
 size_t szp_ble_gatts_char_read_callback_test(uint16_t uuid, char *value, int maxlen)

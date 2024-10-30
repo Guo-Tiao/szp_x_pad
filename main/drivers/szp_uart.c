@@ -3,7 +3,7 @@
 #include "driver/uart.h"
 #include "driver/gpio.h"
 #include "string.h"
-#include "common_macro.h"
+#include "common/common_macro.h"
 
 #if  CONFIG_SZP_EXP_ITF_FUNC_UART
 #include "driver/uart.h"

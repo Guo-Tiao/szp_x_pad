@@ -14,7 +14,8 @@
 #include "esp_bt_device.h"
 #include "esp_gatt_common_api.h"
 
-#include "common_macro.h"
+
+#include "common/common_macro.h"
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/timers.h"

@@ -1,7 +1,8 @@
 #include "storage_manager.h"
-#include "common_macro.h"
 #include "nvs_flash.h"
 #include "esp_err.h"
+
+#include "common/common_macro.h"
 
 //实战派自定义NVS区
 #define SZP_NVS         "szp_nvs"

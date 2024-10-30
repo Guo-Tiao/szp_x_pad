@@ -1,6 +1,6 @@
 #include "szp_i2c.h"
 #include "driver/i2c.h"
-#include "common_macro.h"
+#include "common/common_macro.h"
 
 esp_err_t szp_i2c_init(void)
 {

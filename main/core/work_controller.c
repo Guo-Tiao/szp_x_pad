@@ -1,12 +1,11 @@
 #include "work_controller.h"
-#include "network_manager.h"
-#include "storage_manager.h"
-#include "szp_ble_gatts.h"
+#include "network/network_manager.h"
+#include "storage/storage_manager.h"
+#include "bluetooth/szp_ble_gatts.h"
 #include "szp_config_def.h"
 
 #include "string.h"
 #include "esp_log.h"
-
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"

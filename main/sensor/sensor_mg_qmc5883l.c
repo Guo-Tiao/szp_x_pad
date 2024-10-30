@@ -1,12 +1,13 @@
 #include "szp_sensor_def.h"
-#include "szp_i2c.h"
 #include "driver/i2c.h"
 #include <inttypes.h>
 #include <math.h>
 #include "szp_sensor_manager.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include "common_macro.h"
+
+#include "drivers/szp_i2c.h"
+#include "common/common_macro.h"
 
 //地磁传感器
 SensorMgQmc5883L szp_sensor_mg_qmc5883l;

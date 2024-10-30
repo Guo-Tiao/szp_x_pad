@@ -1,11 +1,12 @@
 #include "szp_sensor_def.h"
-#include "szp_i2c.h"
 #include "driver/i2c.h"
 #include <inttypes.h>
 #include <math.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include "common_macro.h"
+
+#include "drivers/szp_i2c.h"
+#include "common/common_macro.h"
 
 //姿态传感器
 SensorPsQmi8658c szp_sensor_ps_qmi8658c;
