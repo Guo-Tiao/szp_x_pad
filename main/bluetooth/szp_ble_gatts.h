@@ -41,10 +41,23 @@ typedef struct
     szp_ble_gatts_char_write char_write;
 }szp_ble_gatts_char_cb_t;
 
+//ble-gatts事件
+typedef enum
+{
+    EV_SZP_BLE_GATTS_STOP,  //蓝牙关闭
+    EV_SZP_BLE_GATTS_START, //蓝牙开启
+} SzpBleGattsEvent;
+//ble-gatts事件回调函数
+typedef void (*szp_ble_gatts_event_cb)(SzpBleGattsEvent e);
+
 //蓝牙GATTS服务启动
 esp_err_t szp_ble_gatts_start(void);
 //蓝牙GATTS服务停止
 esp_err_t szp_ble_gatts_stop(void);
+//注册蓝牙事件回调
+void szp_ble_gatts_register_event_cb(szp_ble_gatts_event_cb event_cb);
+//获取当前蓝牙状态
+SzpBleGattsEvent szp_ble_gatts_get_current_event(void);
 //注册CHAR/DESCR回调
 void szp_ble_gatts_register_char_cb(szp_ble_gatts_char_cb_t char_cb);
 //添加服务的char/descr

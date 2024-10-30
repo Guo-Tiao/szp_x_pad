@@ -1,4 +1,4 @@
-#include "lvgl_manager.h"
+#include "ui_manager.h"
 #include "lvgl.h"
 #include "esp_timer.h"
 #include "esp_heap_caps.h"
@@ -6,6 +6,8 @@
 
 #include "drivers/szp_lcd.h"
 #include "drivers/szp_touch.h"
+
+#include "ui_szp_main.h"
 
 #define SZP_LVGL_TICK_PERIOD_MS    2
 
@@ -64,6 +66,21 @@ uint32_t szp_lvgl_timer_handler(void)
 lv_obj_t *szp_lvgl_get_scr_act(void)
 {
     return  lv_disp_get_scr_act(szp_lvgl_disp);
+}
+
+void szp_ui_main_setup(void)
+{
+    ui_main_setup();
+}
+
+void szp_ui_update_ble_gatts_evnet(SzpBleGattsEvent ev)
+{
+    ui_mian_update_ble_gatts_evnet(ev);
+}
+
+void szp_ui_update_network_wifi_evnet(SzpWifiStateEvent ev)
+{
+    ui_mian_update_network_wifi_evnet(ev);
 }
 
 //lvgl初始化

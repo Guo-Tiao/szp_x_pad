@@ -2,6 +2,7 @@
 #include "network/network_manager.h"
 #include "storage/storage_manager.h"
 #include "bluetooth/szp_ble_gatts.h"
+#include "ui/ui_manager.h"
 #include "szp_config_def.h"
 
 #include "string.h"
@@ -26,8 +27,14 @@
 #define SZP_GATTS_CHAR_ID_WIFI_AUTO_CONNECT                0xFF74             //可读写(1自动连接/0不自动连接)
 #define SZP_GATTS_DESCR_ID_WIFI_AUTO_CONNECT              0x2774             //描述
 
+//GATTS事件回调
+static void szp_work_ble_gatts_event_callback(SzpBleGattsEvent e)
+{
+    //UI刷新
+    szp_ui_update_ble_gatts_evnet(e);
+}
 //GATTS读char回调
-size_t szp_work_ble_gatts_char_read_callback(uint16_t uuid, char *value, int maxlen)
+static size_t szp_work_ble_gatts_char_read_callback(uint16_t uuid, char *value, int maxlen)
 {
     switch (uuid)
     {
@@ -58,7 +65,7 @@ size_t szp_work_ble_gatts_char_read_callback(uint16_t uuid, char *value, int max
     return 0;
 }
 //GATTS写char回调
-void szp_work_ble_gatts_char_write_callback(uint16_t uuid, const char *value)
+static void szp_work_ble_gatts_char_write_callback(uint16_t uuid, const char *value)
 {
     switch (uuid)
     {
@@ -174,18 +181,28 @@ static void szp_work_ble_gatts_start()
             .char_write = szp_work_ble_gatts_char_write_callback,
         };
     szp_ble_gatts_register_char_cb(cb_t);
+    //事件注册回调
+    szp_ble_gatts_register_event_cb(szp_work_ble_gatts_event_callback);
     //开启蓝牙检查
     szp_ble_gatts_set_check_enable(true);
     //开启蓝牙服务
     szp_ble_gatts_start();
 }
+
 /******************************************* BLE-GATTS *******************************************/
 
 /******************************************* Networkl *******************************************/
-
+//GATTS事件回调
+static void szp_work_network_wifi_event_callback(SzpWifiStateEvent e)
+{
+    //UI刷新
+    szp_ui_update_network_wifi_evnet(e);
+}
 //网络服务开启
 static void szp_work_network_start()
 {
+    //注册回调
+    network_wifi_register_event_cb(szp_work_network_wifi_event_callback);
     //查找是否自动连接wifi
     uint8_t wifi_auto_connect = 0;
     size_t read_len= szp_nvs_read_blob(Nvs_NameSpace_App, Nvs_Key_Wifi_AutoConnect, &wifi_auto_connect, 1);

@@ -164,7 +164,8 @@ static esp_ble_adv_params_t adv_params = {
 /*****************蓝牙定时监控*****************/
 bool szp_ble_gatts_check_enable=false;//是否使能检查
 TimerHandle_t szp_ble_gatts_check_timer_handle=NULL;
-
+SzpBleGattsEvent szp_ble_gatts_current_event=EV_SZP_BLE_GATTS_STOP;
+szp_ble_gatts_event_cb szp_ble_gatts_event_callback;//蓝牙事件回调
 typedef struct 
 {
     bool is_connect;//是否连接
@@ -644,7 +645,11 @@ esp_err_t szp_ble_gatts_start(void)
 //打印蓝牙MAC
     const uint8_t *addr = esp_bt_dev_get_address();
     ESP_LOGI(SZP_GATTS_TAG, "SZP_BLE_GATTS MAC:  %02X.%02X.%02X.%02X.%02X.%02X",addr[0],addr[1],addr[2],addr[3],addr[4],addr[5]);
-
+    szp_ble_gatts_current_event = EV_SZP_BLE_GATTS_START;
+    if(szp_ble_gatts_event_callback)
+    {
+        szp_ble_gatts_event_callback(EV_SZP_BLE_GATTS_START);
+    }
     return ESP_OK;
 }
 //BLE-GATTS关闭
@@ -667,6 +672,11 @@ esp_err_t szp_ble_gatts_stop(void)
         //蓝牙控制器反初始化和关闭
         SZP_ESP_ERR_CHECK(esp_bt_controller_disable());
         SZP_ESP_ERR_CHECK(esp_bt_controller_deinit());
+        szp_ble_gatts_current_event=EV_SZP_BLE_GATTS_STOP;
+        if(szp_ble_gatts_event_callback)
+        {
+            szp_ble_gatts_event_callback(EV_SZP_BLE_GATTS_STOP);
+        }
         return ESP_OK;
     }
     else
@@ -675,7 +685,16 @@ esp_err_t szp_ble_gatts_stop(void)
     }
     return ESP_OK;
 }
-//char读写回调注册
+void szp_ble_gatts_register_event_cb(szp_ble_gatts_event_cb event_cb)
+{
+    szp_ble_gatts_event_callback = event_cb;
+}
+
+SzpBleGattsEvent szp_ble_gatts_get_current_event(void)
+{
+    return szp_ble_gatts_current_event;
+}
+// char读写回调注册
 void szp_ble_gatts_register_char_cb(szp_ble_gatts_char_cb_t char_cb)
 {
     gl_szp_gatts_profile_tab[SZP_BLE_GATTS_APP_ID].char_cb = char_cb;

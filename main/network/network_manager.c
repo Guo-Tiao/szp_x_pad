@@ -22,7 +22,8 @@
 EventGroupHandle_t event_group_szp_wifi;
 //当前wifi状态
 SzpWifiStateEvent network_current_wifi_state;
-
+//wifi事件回调
+network_wifi_event_cb network_wifi_event_callback;
 void network_init(void)
 {
     //wifi初始化
@@ -57,6 +58,10 @@ static void cb_szp_network_wifi_event(SzpWifiConnectEvent e)
             network_current_wifi_state = EV_SZP_WIFI_RECONNECTING;
             xEventGroupSetBits(event_group_szp_wifi, EV_SZP_WIFI_RECONNECTING);
             break;
+        }
+        if(network_wifi_event_callback)
+        {
+            network_wifi_event_callback(network_current_wifi_state);
         }
     }
 }
@@ -146,6 +151,12 @@ SzpWifiStateEvent network_wifi_current_state()
 {
     return network_current_wifi_state;
 }
+
+void network_wifi_register_event_cb(network_wifi_event_cb event_cb)
+{
+    network_wifi_event_callback = event_cb;
+}
+
 #if CONFIG_USE_SZP_MQTT
 #include "szp_mqtt.h"
 //线程等待wifi 开启mqtt

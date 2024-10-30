@@ -34,13 +34,14 @@ typedef enum
     EV_SZP_WIFI_CONNECT_FAIL=0x02,            // wifi连接失败
     EV_SZP_WIFI_RECONNECTING=0x04,          //wifi重连中
 } SzpWifiStateEvent;
-
+typedef void (*network_wifi_event_cb)(SzpWifiStateEvent e);
 //实战派WIFI事件等待
 uint32_t network_wait_wifi_event(SzpWifiStateEvent  evnet,uint32_t waitTimeMs);
 
 //获取当前wifi时间状态
 SzpWifiStateEvent network_wifi_current_state();
-
+//wifi事件回调
+void network_wifi_register_event_cb(network_wifi_event_cb event_cb);
 
 /*************** mqtt操作 ***************/
 

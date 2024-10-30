@@ -396,7 +396,7 @@ CONFIG_PARTITION_TABLE_MD5=y
 #
 # 项目配置
 #
-CONFIG_SZP_PROJECT_RUN_DEMO=y
+# CONFIG_SZP_PROJECT_RUN_DEMO is not set
 # end of 项目配置
 
 #

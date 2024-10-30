@@ -9,7 +9,7 @@
 #include "storage/storage_manager.h"
 #include "network/network_manager.h"
 #include "work_controller.h"
-#include "ui/lvgl_manager.h"
+#include "ui/ui_manager.h"
 
 
 void app_core_init()
@@ -31,10 +31,10 @@ void app_core_init()
 
 }
 
-extern void ui_main_setup();//ui测试
+
 void app_core_run(void)
 {
-   ui_main_setup();
+   szp_ui_main_setup();
    for (;;)
    {
       vTaskDelay(SZP_MS_TO_TICK(10));
