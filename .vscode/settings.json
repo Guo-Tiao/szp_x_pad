@@ -92,6 +92,7 @@
         "szp_x_pad.h": "c",
         "esp_netif_sntp.h": "c",
         "esp_heap_caps.h": "c",
-        "ui_manager.h": "c"
+        "ui_manager.h": "c",
+        "icon_szp_def.h": "c"
     }
 }

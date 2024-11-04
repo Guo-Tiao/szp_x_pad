@@ -7,7 +7,10 @@
 
 #include "time.h"
 
-//主界面
+#include "assets/szp_assets_def.h"
+
+/********************************LV对象成员********************************/
+//主界面对象
 static lv_style_t lv_main_style;//主样式
 lv_obj_t * lv_main_obj;//主界面本体
 
@@ -18,8 +21,15 @@ lv_obj_t *lv_time_label;//主界面标题栏时间控件
 lv_obj_t *lv_ble_gatts_label;//主界面标题栏蓝牙信息
 lv_obj_t *lv_wifi_label;//主界面标题栏wifi信息
 
-//初始化主界面
-static void ui_mian_init()
+//主界面
+lv_obj_t *lv_main_page_gif;
+
+/********************************LV对象成员********************************/
+
+
+
+// 初始化主界面对象
+static void ui_mian_obj_init()
 {
     //修改背景
     lv_obj_set_style_bg_color(lv_scr_act(), lv_color_hex(0x000000), 0); 
@@ -28,8 +38,9 @@ static void ui_mian_init()
     lv_style_set_radius(&lv_main_style, 0); //不设置圆角
     lv_style_set_bg_opa( &lv_main_style, LV_OPA_COVER );
     lv_style_set_bg_color(&lv_main_style, lv_color_hex(0xBEEBFA));
-    lv_style_set_bg_grad_color( &lv_main_style, lv_color_hex(0xFFD2E6) );
-    lv_style_set_bg_grad_dir( &lv_main_style, LV_GRAD_DIR_VER );
+    //lv_style_set_bg_grad_color( &lv_main_style, lv_color_hex(0xB0E0F0) );
+    //lv_style_set_bg_grad_color( &lv_main_style, lv_color_hex(0xFFD2E6) );
+   // lv_style_set_bg_grad_dir( &lv_main_style, LV_GRAD_DIR_VER );
     lv_style_set_border_width(&lv_main_style, 0);
     lv_style_set_pad_all(&lv_main_style, 0);
     lv_style_set_width(&lv_main_style, SZP_LV_UI_HOR);  
@@ -62,28 +73,16 @@ void ui_mian_update_ble_gatts_evnet(SzpBleGattsEvent ev)
 {
     if(lv_ble_gatts_label)
     {
-        (ev == EV_SZP_BLE_GATTS_START) ? lv_obj_clear_flag(lv_ble_gatts_label, LV_OBJ_FLAG_HIDDEN) : lv_obj_add_flag(lv_ble_gatts_label, LV_OBJ_FLAG_HIDDEN);
+        lv_label_set_text(lv_ble_gatts_label, (ev == EV_SZP_BLE_GATTS_START) ? SZP_SYMBOL_BLE_GATTS_START : SZP_SYMBOL_BLE_GATTS_STOP);
     }
 }
-
 void ui_mian_update_network_wifi_evnet(SzpWifiStateEvent ev)
 {
     if(lv_wifi_label)
     {
-        if(ev == EV_SZP_WIFI_CONNECT_SUCCESS)
-        {
-            lv_obj_clear_flag(lv_wifi_label, LV_OBJ_FLAG_HIDDEN);
-            lv_obj_align_to(lv_ble_gatts_label, lv_wifi_label, LV_ALIGN_OUT_LEFT_MID, -10, 0);
-        }
-        else
-        {
-            lv_obj_add_flag(lv_wifi_label, LV_OBJ_FLAG_HIDDEN);
-            lv_obj_align_to(lv_ble_gatts_label, lv_main_title, LV_ALIGN_RIGHT_MID, 5, 0);
-        }
-
+        lv_label_set_text(lv_wifi_label, (ev==EV_SZP_WIFI_CONNECT_SUCCESS)?SZP_SYMBOL_WIFI_CONNECT:SZP_SYMBOL_WIFI_DISCONNECT);
     }
 }
-
 //标题栏初始化
 static void ui_title_init()
 {
@@ -109,34 +108,34 @@ static void ui_title_init()
 
     //创建WIFI信息栏
     lv_wifi_label= lv_label_create(lv_main_title);
-    lv_label_set_text(lv_wifi_label, LV_SYMBOL_WIFI);
+    lv_obj_set_style_text_font(lv_wifi_label, &icon_szp_title_set, 0);
+    lv_label_set_text(lv_wifi_label, (network_wifi_current_state()==EV_SZP_WIFI_CONNECT_SUCCESS)?SZP_SYMBOL_WIFI_CONNECT:SZP_SYMBOL_WIFI_DISCONNECT);
     lv_obj_align_to(lv_wifi_label, lv_main_title, LV_ALIGN_RIGHT_MID, 5, 0);
-
 
     // 创建蓝牙gatts信息栏
     lv_ble_gatts_label = lv_label_create(lv_main_title);
-    lv_label_set_text(lv_ble_gatts_label,  (szp_ble_gatts_get_current_event() == EV_SZP_BLE_GATTS_START) ? LV_SYMBOL_BLUETOOTH : "");
-    (szp_ble_gatts_get_current_event() == EV_SZP_BLE_GATTS_START) ?  lv_obj_clear_flag(lv_ble_gatts_label, LV_OBJ_FLAG_HIDDEN) :  lv_obj_add_flag(lv_ble_gatts_label, LV_OBJ_FLAG_HIDDEN);
-
-    SzpWifiStateEvent wifi_ev = network_wifi_current_state();
-    if (wifi_ev == EV_SZP_WIFI_CONNECT_SUCCESS)
-    {
-        lv_obj_clear_flag(lv_wifi_label, LV_OBJ_FLAG_HIDDEN);
-        lv_obj_align_to(lv_ble_gatts_label, lv_wifi_label, LV_ALIGN_OUT_LEFT_MID, -10, 0);
-    }
-    else
-    {
-        lv_obj_add_flag(lv_wifi_label, LV_OBJ_FLAG_HIDDEN);
-        lv_obj_align_to(lv_ble_gatts_label, lv_main_title, LV_ALIGN_RIGHT_MID, 5, 0);
-    }
+    lv_obj_set_style_text_font(lv_ble_gatts_label, &icon_szp_title_set, 0);
+    lv_label_set_text(lv_ble_gatts_label,  (szp_ble_gatts_get_current_event() == EV_SZP_BLE_GATTS_START) ? SZP_SYMBOL_BLE_GATTS_START : SZP_SYMBOL_BLE_GATTS_STOP);
+    lv_obj_align_to(lv_ble_gatts_label, lv_wifi_label, LV_ALIGN_OUT_LEFT_MID, -10, 0);
 
     //todo:开启线程
     xTaskCreate(task_update_title_info, "task_update_title_info", 2048, NULL, 5, NULL);
 }
+
+//初始化主界面
+static void ui_main_page_init()
+{
+    //创建GIF
+    lv_main_page_gif = lv_gif_create(lv_main_obj);
+    lv_gif_set_src(lv_main_page_gif, &gif_szp_duckyo);
+    lv_obj_align(lv_main_page_gif, LV_ALIGN_BOTTOM_RIGHT, -10, -10);
+}
+
 void ui_main_setup(void)
 {
-    ui_mian_init();
+    ui_mian_obj_init();
     ui_title_init();
+    ui_main_page_init();
 }
 
 
