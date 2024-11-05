@@ -18,6 +18,7 @@ lv_obj_t * lv_main_obj;//主界面本体
 static lv_style_t lv_main_title_style;//主样式
 lv_obj_t *lv_main_title;//主界面标题
 lv_obj_t *lv_time_lb;//主界面标题栏时间控件
+lv_obj_t *lv_heap_lb;//主界面标题栏内存控件
 lv_obj_t *lv_ble_gatts_lb;//主界面标题栏蓝牙信息
 lv_obj_t *lv_wifi_lb;//主界面标题栏wifi信息
 
@@ -65,7 +66,9 @@ static void task_update_title_info(void *arg)
         strftime(buf, sizeof(buf), "%H:%M:%S", &time_info);
         lv_label_set_text(lv_time_lb, buf);
 
-        
+        sprintf(buf, "%.2fkb", (esp_get_free_heap_size() / 1000.00));
+        lv_label_set_text(lv_heap_lb, buf);
+
         vTaskDelay(SZP_MS_TO_TICK(500));
     }
 }
@@ -105,7 +108,11 @@ static void ui_title_init()
     lv_obj_set_width(lv_time_lb, SZP_LV_UI_HOR/4);
     lv_label_set_text(lv_time_lb, "00:00:00");
     lv_obj_align(lv_time_lb, LV_ALIGN_LEFT_MID, 5, 0);
-
+    //创建左上角内存显示
+    lv_heap_lb = lv_label_create(lv_main_title);
+    lv_obj_set_width(lv_heap_lb, SZP_LV_UI_HOR / 4);
+    lv_label_set_text(lv_heap_lb, "0kb");
+    lv_obj_align_to(lv_heap_lb, lv_time_lb,LV_ALIGN_OUT_RIGHT_MID, 10, 0);
     //创建WIFI信息栏
     lv_wifi_lb= lv_label_create(lv_main_title);
     lv_obj_set_style_text_font(lv_wifi_lb, &icon_szp_title_set, 0);
@@ -128,7 +135,7 @@ static void ui_main_page_init()
     //创建GIF
     lv_main_page_gif = lv_gif_create(lv_main_obj);
     lv_gif_set_src(lv_main_page_gif, &gif_szp_duckyo);
-    lv_obj_align(lv_main_page_gif, LV_ALIGN_BOTTOM_RIGHT, -10, -10);
+    lv_obj_align(lv_main_page_gif, LV_ALIGN_BOTTOM_LEFT, 5, -5);
 
 }
 
