@@ -11,7 +11,7 @@
 #define SZP_GATTS_DEVICE_NAME                           "Szp-X-Pad"      //蓝牙名称
 
 #define SZP_BLE_GATTS_CHECK_TIMER_ID                      77              //定时器ID
-#define SZP_BLE_GATTS_LOST_CONNECT_TIME_S           60*3          //丢失连接时间,单位秒(超过自动关闭蓝牙)
+#define SZP_BLE_GATTS_LOST_CONNECT_TIME_S           60*1          //丢失连接时间,单位秒(超过自动关闭蓝牙)
 
 //gatts char和descr配置结构体
 typedef struct

@@ -17,9 +17,9 @@ lv_obj_t * lv_main_obj;//主界面本体
 //标题栏
 static lv_style_t lv_main_title_style;//主样式
 lv_obj_t *lv_main_title;//主界面标题
-lv_obj_t *lv_time_label;//主界面标题栏时间控件
-lv_obj_t *lv_ble_gatts_label;//主界面标题栏蓝牙信息
-lv_obj_t *lv_wifi_label;//主界面标题栏wifi信息
+lv_obj_t *lv_time_lb;//主界面标题栏时间控件
+lv_obj_t *lv_ble_gatts_lb;//主界面标题栏蓝牙信息
+lv_obj_t *lv_wifi_lb;//主界面标题栏wifi信息
 
 //主界面
 lv_obj_t *lv_main_page_gif;
@@ -63,24 +63,24 @@ static void task_update_title_info(void *arg)
         localtime_r(&now, &time_info);
         char buf[20];
         strftime(buf, sizeof(buf), "%H:%M:%S", &time_info);
-        lv_label_set_text(lv_time_label, buf);
+        lv_label_set_text(lv_time_lb, buf);
 
-        //todo 延时操作
+        
         vTaskDelay(SZP_MS_TO_TICK(500));
     }
 }
 void ui_mian_update_ble_gatts_evnet(SzpBleGattsEvent ev)
 {
-    if(lv_ble_gatts_label)
+    if(lv_ble_gatts_lb)
     {
-        lv_label_set_text(lv_ble_gatts_label, (ev == EV_SZP_BLE_GATTS_START) ? SZP_SYMBOL_BLE_GATTS_START : SZP_SYMBOL_BLE_GATTS_STOP);
+        lv_label_set_text(lv_ble_gatts_lb, (ev == EV_SZP_BLE_GATTS_START) ? SZP_SYMBOL_BLE_GATTS_START : SZP_SYMBOL_BLE_GATTS_STOP);
     }
 }
 void ui_mian_update_network_wifi_evnet(SzpWifiStateEvent ev)
 {
-    if(lv_wifi_label)
+    if(lv_wifi_lb)
     {
-        lv_label_set_text(lv_wifi_label, (ev==EV_SZP_WIFI_CONNECT_SUCCESS)?SZP_SYMBOL_WIFI_CONNECT:SZP_SYMBOL_WIFI_DISCONNECT);
+        lv_label_set_text(lv_wifi_lb, (ev==EV_SZP_WIFI_CONNECT_SUCCESS)?SZP_SYMBOL_WIFI_CONNECT:SZP_SYMBOL_WIFI_DISCONNECT);
     }
 }
 //标题栏初始化
@@ -101,22 +101,22 @@ static void ui_title_init()
     lv_obj_add_style(lv_main_title, &lv_main_title_style, 0);
     lv_obj_clear_flag(lv_main_title, LV_OBJ_FLAG_SCROLLABLE);
     //创建左上角时间显示
-    lv_time_label= lv_label_create(lv_main_title);
-    lv_obj_set_width(lv_time_label, SZP_LV_UI_HOR/4);
-    lv_label_set_text(lv_time_label, "00:00:00");
-    lv_obj_align(lv_time_label, LV_ALIGN_LEFT_MID, 5, 0);
+    lv_time_lb= lv_label_create(lv_main_title);
+    lv_obj_set_width(lv_time_lb, SZP_LV_UI_HOR/4);
+    lv_label_set_text(lv_time_lb, "00:00:00");
+    lv_obj_align(lv_time_lb, LV_ALIGN_LEFT_MID, 5, 0);
 
     //创建WIFI信息栏
-    lv_wifi_label= lv_label_create(lv_main_title);
-    lv_obj_set_style_text_font(lv_wifi_label, &icon_szp_title_set, 0);
-    lv_label_set_text(lv_wifi_label, (network_wifi_current_state()==EV_SZP_WIFI_CONNECT_SUCCESS)?SZP_SYMBOL_WIFI_CONNECT:SZP_SYMBOL_WIFI_DISCONNECT);
-    lv_obj_align_to(lv_wifi_label, lv_main_title, LV_ALIGN_RIGHT_MID, 5, 0);
+    lv_wifi_lb= lv_label_create(lv_main_title);
+    lv_obj_set_style_text_font(lv_wifi_lb, &icon_szp_title_set, 0);
+    lv_label_set_text(lv_wifi_lb, (network_wifi_current_state()==EV_SZP_WIFI_CONNECT_SUCCESS)?SZP_SYMBOL_WIFI_CONNECT:SZP_SYMBOL_WIFI_DISCONNECT);
+    lv_obj_align_to(lv_wifi_lb, lv_main_title, LV_ALIGN_RIGHT_MID, 5, 0);
 
     // 创建蓝牙gatts信息栏
-    lv_ble_gatts_label = lv_label_create(lv_main_title);
-    lv_obj_set_style_text_font(lv_ble_gatts_label, &icon_szp_title_set, 0);
-    lv_label_set_text(lv_ble_gatts_label,  (szp_ble_gatts_get_current_event() == EV_SZP_BLE_GATTS_START) ? SZP_SYMBOL_BLE_GATTS_START : SZP_SYMBOL_BLE_GATTS_STOP);
-    lv_obj_align_to(lv_ble_gatts_label, lv_wifi_label, LV_ALIGN_OUT_LEFT_MID, -10, 0);
+    lv_ble_gatts_lb = lv_label_create(lv_main_title);
+    lv_obj_set_style_text_font(lv_ble_gatts_lb, &icon_szp_title_set, 0);
+    lv_label_set_text(lv_ble_gatts_lb,  (szp_ble_gatts_get_current_event() == EV_SZP_BLE_GATTS_START) ? SZP_SYMBOL_BLE_GATTS_START : SZP_SYMBOL_BLE_GATTS_STOP);
+    lv_obj_align_to(lv_ble_gatts_lb, lv_wifi_lb, LV_ALIGN_OUT_LEFT_MID, -10, 0);
 
     //todo:开启线程
     xTaskCreate(task_update_title_info, "task_update_title_info", 2048, NULL, 5, NULL);
@@ -129,6 +129,7 @@ static void ui_main_page_init()
     lv_main_page_gif = lv_gif_create(lv_main_obj);
     lv_gif_set_src(lv_main_page_gif, &gif_szp_duckyo);
     lv_obj_align(lv_main_page_gif, LV_ALIGN_BOTTOM_RIGHT, -10, -10);
+
 }
 
 void ui_main_setup(void)
