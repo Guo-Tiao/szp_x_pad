@@ -34,7 +34,7 @@ void app_core_init()
 
 void app_core_run(void)
 {
-   szp_ui_main_setup();
+   szp_ui_sys_setup();
    for (;;)
    {
       vTaskDelay(SZP_MS_TO_TICK(10));
