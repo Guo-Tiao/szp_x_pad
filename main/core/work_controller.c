@@ -2,6 +2,7 @@
 #include "network/network_manager.h"
 #include "storage/storage_manager.h"
 #include "bluetooth/szp_ble_gatts.h"
+#include "sensor/szp_sensor_manager.h"
 #include "ui/ui_manager.h"
 #include "szp_config_def.h"
 
@@ -276,7 +277,7 @@ bool szp_work_ble_stop(void)
 static void szp_work_network_wifi_event_callback(SzpWifiStateEvent e)
 {
     //UI刷新
-    szp_ui_update_network_wifi_evnet(e);
+    szp_ui_update_network_wifi_event(e);
 }
 //网络服务开启
 static void szp_work_network_start()
@@ -296,10 +297,12 @@ static void szp_work_network_start()
     }
 #endif
     //开启SNTP授时
-   network_start_sntp_task();
+    network_sntp_complete_register_cb(szp_ui_sntp_complete_event);
+    network_start_sntp_task();
 
-   //开启天气获取定时任务
-   network_start_weather_timer_task();
+    // 开启天气获取定时任务
+    network_weather_update_register_cb(szp_ui_weather_update_info);
+    network_start_weather_timer_task();
 }
 /******************************************* Networkl *******************************************/
 
@@ -312,5 +315,6 @@ void szp_work_init()
     //开启网络服务
     szp_work_network_start();
 #endif
-
+    //开启传感器更新线程
+    szp_sensor_ThGxhtc3_start_task();
 }

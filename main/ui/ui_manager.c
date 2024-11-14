@@ -17,7 +17,10 @@
 
 #include "time.h"
 
+#include "sdkconfig.h"
+
 #define SZP_LVGL_TICK_PERIOD_MS    2
+#define SZP_UI_SHOW_DEBUG              CONFIG_SZP_UI_TITLE_SHOW_DEBUG
 
 static lv_disp_draw_buf_t               szp_lvgl_disp_buf;           //显示缓存
 static lv_disp_drv_t                         szp_lvgl_disp_drv;           //显示驱动 
@@ -32,8 +35,11 @@ static lv_obj_t * lv_ui_sys_obj;//UI系统本体
 static lv_style_t lv_sys_title_style;//标题栏样式
 lv_obj_t *lv_sys_title;//系统标题栏
 //标题栏控件
+lv_obj_t *lv_title_timer;//系统栏刷新定时器
 lv_obj_t *lv_st_time_lb;//系统标题栏-时间控件
+#if  SZP_UI_SHOW_DEBUG
 lv_obj_t *lv_st_heap_lb;//系统标题栏-内存控件
+#endif
 lv_obj_t *lv_st_ble_gatts_lb;//系统标题栏-蓝牙信息
 lv_obj_t *lv_st_wifi_lb;//系统标题栏-wifi信息
 /********************************LV对象成员********************************/
@@ -162,24 +168,21 @@ static void szp_ui_sys_obj_init(void)
 }
 
 //更新系统标题栏
-static void task_update_sys_title_info(void *arg)
+static void timer_cb_update_sys_title_info(struct _lv_timer_t *)
 {
-    for (;;)
-    {
-       //刷新时间
-        time_t now = 0;
-        struct tm time_info = { 0 };
-        time(&now);
-        localtime_r(&now, &time_info);
-        char buf[20];
-        strftime(buf, sizeof(buf), "%H:%M:%S", &time_info);
-        lv_label_set_text(lv_st_time_lb, buf);
-        //刷新内存
-        sprintf(buf, "%.2fkb", (esp_get_free_heap_size() / 1000.00));
-        lv_label_set_text(lv_st_heap_lb, buf);
-        //延时500MS
-        vTaskDelay(SZP_MS_TO_TICK(500));
-    }
+    //刷新时间
+    time_t now = 0;
+    struct tm time_info = {0};
+    time(&now);
+    localtime_r(&now, &time_info);
+    char buf[20];
+    strftime(buf, sizeof(buf), "%H:%M:%S", &time_info);
+    lv_label_set_text(lv_st_time_lb, buf);
+    // 刷新内存
+#if  SZP_UI_SHOW_DEBUG
+    sprintf(buf, "%.2fkb", (esp_get_free_heap_size() / 1000.00));
+    lv_label_set_text(lv_st_heap_lb, buf);
+#endif
 }
 
 void szp_ui_update_ble_gatts_evnet(SzpBleGattsEvent ev)
@@ -190,12 +193,22 @@ void szp_ui_update_ble_gatts_evnet(SzpBleGattsEvent ev)
     }
 }
 
-void szp_ui_update_network_wifi_evnet(SzpWifiStateEvent ev)
+void szp_ui_update_network_wifi_event(SzpWifiStateEvent ev)
 {
    if(lv_st_wifi_lb)
     {
         lv_label_set_text(lv_st_wifi_lb, (ev==EV_SZP_WIFI_CONNECT_SUCCESS)?SZP_SYMBOL_WIFI_CONNECT:SZP_SYMBOL_WIFI_DISCONNECT);
     }
+}
+
+void szp_ui_sntp_complete_event()
+{
+    ui_home_page_upate_date();
+}
+
+void szp_ui_weather_update_info(SzpWeatherInfo info)
+{
+    ui_home_page_weather_update_info(info);
 }
 
 //标题栏初始化
@@ -221,10 +234,12 @@ static void szp_ui_sys_title_init()
     lv_label_set_text(lv_st_time_lb, "00:00:00");
     lv_obj_align(lv_st_time_lb, LV_ALIGN_LEFT_MID, 5, 0);
     //创建左上角内存显示
+#if  SZP_UI_SHOW_DEBUG
     lv_st_heap_lb = lv_label_create(lv_sys_title);
     lv_obj_set_width(lv_st_heap_lb, SZP_LV_UI_HOR / 4);
     lv_label_set_text(lv_st_heap_lb, "0kb");
     lv_obj_align_to(lv_st_heap_lb, lv_st_time_lb,LV_ALIGN_OUT_RIGHT_MID, 10, 0);
+#endif
     //创建WIFI信息栏
     lv_st_wifi_lb= lv_label_create(lv_sys_title);
     lv_obj_set_style_text_font(lv_st_wifi_lb, &icon_szp_title_set, 0);
@@ -237,8 +252,8 @@ static void szp_ui_sys_title_init()
     lv_label_set_text(lv_st_ble_gatts_lb,  (szp_ble_gatts_get_current_event() == EV_SZP_BLE_GATTS_START) ? SZP_SYMBOL_BLE_GATTS_START : SZP_SYMBOL_BLE_GATTS_STOP);
     lv_obj_align_to(lv_st_ble_gatts_lb, lv_st_wifi_lb, LV_ALIGN_OUT_LEFT_MID, -10, 0);
 
-    //开启系统标题栏刷新线程
-    xTaskCreate(task_update_sys_title_info, "task_update_sys_title_info", 2048, NULL, 5, NULL);
+    //开启系统标题栏刷新定时器
+    lv_title_timer = lv_timer_create(timer_cb_update_sys_title_info, 500, NULL);
 }
 
 //UI系统安装

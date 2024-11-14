@@ -31,7 +31,11 @@ void szp_ui_update_ble_gatts_evnet(SzpBleGattsEvent ev);
 
 /**UI-Network**/
 #include "network/network_manager.h"
-void szp_ui_update_network_wifi_evnet(SzpWifiStateEvent ev);
+void szp_ui_update_network_wifi_event(SzpWifiStateEvent ev);
+//授时完成回调
+void szp_ui_sntp_complete_event();
+#include "network/szp_weather_api.h"
+void szp_ui_weather_update_info(SzpWeatherInfo info);
 /**UI-Network**/
 /*************UI接口*************/
 

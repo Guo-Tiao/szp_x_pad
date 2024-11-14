@@ -19,3 +19,10 @@ LV_FONT_DECLARE(icon_szp_title_set);
 /**************************** GIF ****************************/
 //主界面动图
 LV_IMG_DECLARE(gif_szp_duckyo);
+
+/**************************** FONT ****************************/
+LV_FONT_DECLARE(font_szp_Harmony_12);
+LV_FONT_DECLARE(font_szp_Harmony_14);
+LV_FONT_DECLARE(font_szp_Harmony_16);
+LV_FONT_DECLARE(icon_szp_weather);
+LV_FONT_DECLARE(font_szp_digital);

@@ -3,6 +3,10 @@
 
 //传感器初始化
 void szp_sensor_init(void);
+//开启温度传感器更新线程
+void szp_sensor_ThGxhtc3_start_task();
+//关闭温度传感器更新线程
+void szp_sensor_ThGxhtc3_stop_task();
 
 //导出温湿度传感器
 extern SensorThGxhtc3 szp_sensor_th_gxhtc3;

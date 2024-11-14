@@ -18,6 +18,9 @@ menu "Szp Project Config"
         config SZP_LVGL_VER_DISP
             bool "使能LVGL竖屏显示"
             default n 
+        config SZP_UI_TITLE_SHOW_DEBUG
+                bool "使能标题栏显示调试信息"
+                default n 
     endmenu
 
     #扩展接口配置项

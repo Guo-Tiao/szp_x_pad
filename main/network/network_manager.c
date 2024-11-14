@@ -31,7 +31,10 @@ EventGroupHandle_t event_group_szp_wifi;
 SzpWifiStateEvent network_current_wifi_state;
 //wifi事件回调
 network_wifi_event_cb network_wifi_event_callback;
-
+//SNTP授时回调
+sntp_complete_cb sntp_complete_callback;
+//天气更新回调
+weather_update_cb weather_update_callback;
 void network_init(void)
 {
     //wifi初始化
@@ -237,7 +240,6 @@ void network_start_mqtt_task()
 //SNTP授时
 static void task_network_sntp_get_time(void *arg)
 {
-
     //判断是否需要授时
     time_t now = 0;
     struct tm time_info = { 0 };
@@ -275,6 +277,10 @@ static void task_network_sntp_get_time(void *arg)
             ESP_LOGI(SZP_NETWORK_TAG, "SNTP授时成功,当前时间:%d-%d-%d %d:%d:%d",
                      time_info.tm_year+1900, time_info.tm_mon+1, time_info.tm_mday,
                      time_info.tm_hour, time_info.tm_min, time_info.tm_sec);
+            if(sntp_complete_callback)
+            {
+                sntp_complete_callback();
+            }        
         }
         else//授时失败
         {
@@ -307,7 +313,10 @@ static void task_network_weather_info_update(void *arg)
         esp_err_t ret= szp_weather_api_get_daily(&info.daily);
         ret= szp_weather_api_get_now(&info.now);
         ret= szp_weather_api_get_air(&info.air);
-        //todo:刷新UI
+        if(weather_update_callback)
+        {
+            weather_update_callback(info);
+        }
     }
     else
     {
@@ -323,6 +332,11 @@ static void network_weather_update_timer_callback(TimerHandle_t handle)
     {
         xTaskCreate(task_network_weather_info_update, "nw_weather_update", 8192, NULL, 5, NULL);
     }
+}
+
+void network_sntp_complete_register_cb(sntp_complete_cb cb)
+{
+    sntp_complete_callback = cb;
 }
 
 bool network_start_weather_timer_task()
@@ -356,5 +370,9 @@ bool network_stop_weather_timer_task()
     xTimerDelete(szp_weather_update_timer_handle, SZP_WAIT_FOR_INFINITE);
     szp_weather_update_timer_handle = NULL;
     return true;
+}
+void network_weather_update_register_cb(weather_update_cb cb)
+{
+    weather_update_callback = cb;
 }
 /*************** web服务操作 ***************/

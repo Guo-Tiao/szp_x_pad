@@ -64,8 +64,15 @@ void network_start_mqtt_task();
 /*************** web服务操作 ***************/
 //开启SNTP授时任务(一次性任务)
 void network_start_sntp_task();
+//授时完成回调
+typedef void (*sntp_complete_cb)(void);
+void network_sntp_complete_register_cb(sntp_complete_cb cb);
 //开启天气更新任务(定时十分钟)
 bool network_start_weather_timer_task();
 //关闭天气更新任务
 bool network_stop_weather_timer_task();
+//天气更新回调
+#include "szp_weather_api.h"
+typedef void (*weather_update_cb)(SzpWeatherInfo info);
+void network_weather_update_register_cb(weather_update_cb cb);
 /*************** web服务操作 ***************/
