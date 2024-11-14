@@ -208,7 +208,7 @@ static bool szp_ble_gatts_start_check_timer()
 {
     if(szp_ble_gatts_check_enable&&szp_ble_gatts_check_timer_handle!=NULL)
     {
-        xTimerStart(szp_ble_gatts_check_timer_handle, portMAX_DELAY);
+        xTimerStart(szp_ble_gatts_check_timer_handle, SZP_WAIT_FOR_INFINITE);
         return true;
     }
     return false;
@@ -219,7 +219,7 @@ static bool szp_ble_gatts_stop_check_timer()
     if(szp_ble_gatts_check_enable&&szp_ble_gatts_check_timer_handle!=NULL)
     {
         szp_ble_gatts_update_check_time(false);
-        xTimerStop(szp_ble_gatts_check_timer_handle, portMAX_DELAY);
+        xTimerStop(szp_ble_gatts_check_timer_handle, SZP_WAIT_FOR_INFINITE);
         return true;
     }
     return false;
@@ -663,7 +663,7 @@ esp_err_t szp_ble_gatts_stop(void)
         szp_ble_gatts_stop_check_timer();
         if(szp_ble_gatts_check_enable&&szp_ble_gatts_check_timer_handle!=NULL)
         {
-            xTimerDelete(szp_ble_gatts_check_timer_handle, portMAX_DELAY);
+            xTimerDelete(szp_ble_gatts_check_timer_handle, SZP_WAIT_FOR_INFINITE);
              szp_ble_gatts_check_timer_handle = NULL;
         }
         //bluedroid反初始化和关闭

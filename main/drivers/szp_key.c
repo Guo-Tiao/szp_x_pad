@@ -99,7 +99,7 @@ static void szp_key_monitor_task(void *params)
     //状态机判断
     for (;;)
     { 
-         if(xQueueReceive(szp_key_monitor_evt_queue, &io_num, portMAX_DELAY)) 
+         if(xQueueReceive(szp_key_monitor_evt_queue, &io_num, SZP_WAIT_FOR_INFINITE)) 
         {
             TickType_t current_time = SZP_TICK_TO_MS(xTaskGetTickCount());//获取按下的时间ms记为上次ms
             //初始化状态    

@@ -94,6 +94,14 @@
         "esp_heap_caps.h": "c",
         "ui_manager.h": "c",
         "icon_szp_def.h": "c",
-        "szp_assets_def.h": "c"
+        "szp_assets_def.h": "c",
+        "esp_tls.h": "c",
+        "ssl.h": "c",
+        "entropy.h": "c",
+        "ssl_ticket.h": "c",
+        "ctr_drbg.h": "c",
+        "stdbool.h": "c",
+        "esp_crt_bundle.h": "c",
+        "esp_bt_device.h": "c"
     }
 }

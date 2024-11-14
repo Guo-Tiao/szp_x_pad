@@ -1,5 +1,6 @@
 #pragma once
 #include "esp_err.h"
+#include "stdbool.h"
 #include "sdkconfig.h"
 
 //NVS配置
@@ -7,6 +8,8 @@
 #define Nvs_Key_Wifi_Ssid                   "wifi_ssid"                 //wifi名称
 #define Nvs_Key_Wifi_Password          "wifi_password"       //wifi密码
 
+#define Nvs_Key_Weather_Api_Key     "weather_key"          //天气API密钥
+#define Nvs_Key_Weather_Api_City     "weather_city"          //天气API城市
 
 
 //网络初始化
@@ -42,6 +45,12 @@ uint32_t network_wait_wifi_event(SzpWifiStateEvent  evnet,uint32_t waitTimeMs);
 SzpWifiStateEvent network_wifi_current_state();
 //wifi事件回调
 void network_wifi_register_event_cb(network_wifi_event_cb event_cb);
+//等待wifi连接成功
+bool network_wait_wifi_connect_success(uint32_t waitMs);
+
+/*************** wifi操作 ***************/
+
+
 
 /*************** mqtt操作 ***************/
 
@@ -49,5 +58,14 @@ void network_wifi_register_event_cb(network_wifi_event_cb event_cb);
 //开启MQTT连接任务
 void network_start_mqtt_task();
 #endif
-//开启SNTP授时任务
+/*************** mqtt操作 ***************/
+
+
+/*************** web服务操作 ***************/
+//开启SNTP授时任务(一次性任务)
 void network_start_sntp_task();
+//开启天气更新任务(定时十分钟)
+bool network_start_weather_timer_task();
+//关闭天气更新任务
+bool network_stop_weather_timer_task();
+/*************** web服务操作 ***************/

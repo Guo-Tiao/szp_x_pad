@@ -1,13 +1,17 @@
 #include "network_manager.h"
 #include "szp_wifi.h"
+#include "szp_weather_api.h"
 #include "storage/storage_manager.h"
+
 #include "string.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/event_groups.h"
+#include "freertos/timers.h"
+
 #include "common/common_macro.h"
+
 #include "esp_sntp.h"
 #include "esp_netif_sntp.h"
-
 #include "esp_log.h"
 
 #define SZP_NETWORK_TAG         "SZP_NETWORK"
@@ -17,6 +21,9 @@
 #define DEFAULT_SZP_WIFI_RETRY_COUNT      CONFIG_SZP_WIFI_RETRY_COUNT
 //SNTP
 #define SZP_SNTP_SERVER_URI                         CONFIG_SZP_SNTP_SERVER_URI
+//WEATHER
+#define SZP_WEATHER_UPDATE_TIMER_ID             88
+#define SZP_WEATHER_UPDATE_TIME                     1000*60*10      //10分钟更新一次
 
 //实战派wifi事件组
 EventGroupHandle_t event_group_szp_wifi;
@@ -24,6 +31,7 @@ EventGroupHandle_t event_group_szp_wifi;
 SzpWifiStateEvent network_current_wifi_state;
 //wifi事件回调
 network_wifi_event_cb network_wifi_event_callback;
+
 void network_init(void)
 {
     //wifi初始化
@@ -40,6 +48,7 @@ void network_init(void)
     tzset();
 }
 
+/*************** wifi操作 ***************/
 static void cb_szp_network_wifi_event(SzpWifiConnectEvent e)
 {
     if(event_group_szp_wifi)
@@ -157,6 +166,30 @@ void network_wifi_register_event_cb(network_wifi_event_cb event_cb)
     network_wifi_event_callback = event_cb;
 }
 
+//等待wifi连接成功
+bool network_wait_wifi_connect_success(uint32_t waitMs)
+{
+     bool is_wifi_connect = false;
+    //wifi未连接进入等待
+    if(network_wifi_current_state()!=EV_SZP_WIFI_CONNECT_SUCCESS)
+    {
+        uint32_t event = network_wait_wifi_event(EV_SZP_WIFI_CONNECT_SUCCESS, waitMs); // 等待一分钟
+        if (event & EV_SZP_WIFI_CONNECT_SUCCESS)
+        {
+            is_wifi_connect = true;
+        }
+    }
+    else
+    {
+        is_wifi_connect = true;
+    }
+    return is_wifi_connect;
+}
+/*************** wifi操作 ***************/
+
+
+
+/*************** mqtt操作 ***************/
 #if CONFIG_USE_SZP_MQTT
 #include "szp_mqtt.h"
 //线程等待wifi 开启mqtt
@@ -198,8 +231,9 @@ void network_start_mqtt_task()
 
 #endif
 
+/*************** mqtt操作 ***************/
 
-
+/*************** web服务操作 ***************/
 //SNTP授时
 static void task_network_sntp_get_time(void *arg)
 {
@@ -217,21 +251,9 @@ static void task_network_sntp_get_time(void *arg)
         vTaskDelete(NULL);
         return;
     }
-    bool is_wifi_connect = false;
+
     //wifi未连接进入等待
-    if(network_wifi_current_state()!=EV_SZP_WIFI_CONNECT_SUCCESS)
-    {
-        uint32_t event = network_wait_wifi_event(EV_SZP_WIFI_CONNECT_SUCCESS, 60 * 1000); // 等待一分钟
-        if (event & EV_SZP_WIFI_CONNECT_SUCCESS)
-        {
-            is_wifi_connect = true;
-        }
-    }
-    else
-    {
-        is_wifi_connect = true;
-    }
-    if(is_wifi_connect)
+    if(network_wait_wifi_connect_success(60 * 1000))// 等待一分钟
     {
         //配置SNTP服务
         esp_sntp_config_t config = ESP_NETIF_SNTP_DEFAULT_CONFIG(SZP_SNTP_SERVER_URI);
@@ -268,7 +290,71 @@ static void task_network_sntp_get_time(void *arg)
 
 void network_start_sntp_task()
 {
-    xTaskCreate(task_network_sntp_get_time, "task_network_sntp_get_time", 2048, NULL, 5, NULL);
+    xTaskCreate(task_network_sntp_get_time, "nw_sntp_get_time", 2048, NULL, 5, NULL);
 }
 
+//天气更新任务定时器(十分钟)
+TimerHandle_t szp_weather_update_timer_handle=NULL;
+bool szp_weather_update_task_running = false;
+//天气信息更新任务
+static void task_network_weather_info_update(void *arg)
+{
+    szp_weather_update_task_running = true;
+    //等待WIFI连接
+    if(network_wait_wifi_connect_success(60 * 1000))
+    {
+        SzpWeatherInfo info;
+        esp_err_t ret= szp_weather_api_get_daily(&info.daily);
+        ret= szp_weather_api_get_now(&info.now);
+        ret= szp_weather_api_get_air(&info.air);
+        //todo:刷新UI
+    }
+    else
+    {
+        ESP_LOGE(SZP_NETWORK_TAG,"wifi未连接,获取天气信息失败");
+    }
+    szp_weather_update_task_running = false;
+    vTaskDelete(NULL);
+}
 
+static void network_weather_update_timer_callback(TimerHandle_t handle)
+{
+    if(!szp_weather_update_task_running)
+    {
+        xTaskCreate(task_network_weather_info_update, "nw_weather_update", 8192, NULL, 5, NULL);
+    }
+}
+
+bool network_start_weather_timer_task()
+{
+     if(szp_weather_update_timer_handle!=NULL)
+    {
+        return false;
+    }
+    //先更新下链接
+    szp_weather_update_url();
+    szp_weather_update_timer_handle=xTimerCreate(
+            "szp_weather_update_timer", 
+            SZP_MS_TO_TICK(SZP_WEATHER_UPDATE_TIME), 
+            SZP_OS_TRUE, 
+            (void *)SZP_WEATHER_UPDATE_TIMER_ID, 
+            network_weather_update_timer_callback);
+    szp_weather_update_task_running = false;
+    //先调用一次回调执行，再开启定时
+    network_weather_update_timer_callback(NULL);
+    xTimerStart(szp_weather_update_timer_handle, SZP_WAIT_FOR_INFINITE);
+    return true;
+}
+    
+bool network_stop_weather_timer_task()
+{
+    if(szp_weather_update_timer_handle==NULL)
+    {
+        return false;
+    }
+    xTimerStop(szp_weather_update_timer_handle, SZP_WAIT_FOR_INFINITE);
+    xTimerDelete(szp_weather_update_timer_handle, SZP_WAIT_FOR_INFINITE);
+    szp_weather_update_timer_handle = NULL;
+    return true;
+}
+/*************** web服务操作 ***************/
