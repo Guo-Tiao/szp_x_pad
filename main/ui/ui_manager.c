@@ -119,11 +119,11 @@ void szp_lvgl_init(void)
     //LVGL初始化
     lv_init();
     //缓存初始化
-    lv_color_t *buf1 = heap_caps_malloc(SZP_LCD_H_RES * 20 * sizeof(lv_color_t), MALLOC_CAP_DMA);
+    lv_color_t *buf1 = heap_caps_malloc(SZP_LCD_H_RES * 40 * sizeof(lv_color_t), MALLOC_CAP_DMA);
     assert(buf1);
-    lv_color_t *buf2 = heap_caps_malloc(SZP_LCD_H_RES * 20 * sizeof(lv_color_t), MALLOC_CAP_DMA);
+    lv_color_t *buf2 = heap_caps_malloc(SZP_LCD_H_RES * 40 * sizeof(lv_color_t), MALLOC_CAP_DMA);
     assert(buf2);
-    lv_disp_draw_buf_init(&szp_lvgl_disp_buf, buf1, buf2, SZP_LCD_H_RES * 20);
+    lv_disp_draw_buf_init(&szp_lvgl_disp_buf, buf1, buf2, SZP_LCD_H_RES * 40);
    
     //显示驱动初始化
     lv_disp_drv_init(&szp_lvgl_disp_drv);
