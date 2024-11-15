@@ -1,7 +1,7 @@
 #pragma once
 #include "ui_manager.h"
-//主界面UI安装
-void ui_main_setup(void);
+//首界面UI安装
+void ui_home_page_setup(lv_obj_t *parent);
 //更新日期
 void ui_home_page_upate_date();
 //更新天气

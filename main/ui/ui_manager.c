@@ -12,7 +12,9 @@
 #include "drivers/szp_touch.h"
 
 #include "ui_common_def.h"
-#include "ui_szp_main.h"
+#include "ui_szp_home_page.h"
+#include "ui_szp_monitor_page.h"
+#include "ui_szp_app_page.h"
 #include "assets/szp_assets_def.h"
 
 #include "time.h"
@@ -42,6 +44,17 @@ lv_obj_t *lv_st_heap_lb;//系统标题栏-内存控件
 #endif
 lv_obj_t *lv_st_ble_gatts_lb;//系统标题栏-蓝牙信息
 lv_obj_t *lv_st_wifi_lb;//系统标题栏-wifi信息
+
+//主视图
+ #define SZP_UI_MTV_PAGE_MONITOR             0        //PC端性能监控
+ #define SZP_UI_MTV_PAGE_HOME                   1       //主界面
+ #define SZP_UI_MTV_PAGE_APP                       2        //APP界面
+
+static lv_obj_t* lv_ui_main_tileview;   //UI主视图
+static lv_style_t lv_ui_main_tileview_style;//主视图样式
+lv_obj_t *lv_ui_monitor_page;//PC端性能监控
+lv_obj_t *lv_ui_home_page;//主界面
+lv_obj_t *lv_ui_app_page;//APP界面
 /********************************LV对象成员********************************/
 
 /*************LVGL接口*************/
@@ -256,6 +269,92 @@ static void szp_ui_sys_title_init()
     lv_title_timer = lv_timer_create(timer_cb_update_sys_title_info, 500, NULL);
 }
 
+//标题栏隐藏动画回调
+static void ui_sys_title_hidden_anim(void* var, int32_t value)
+{
+    lv_obj_move_to(var, 0, value);
+}
+//设置标题栏可视化
+void ui_sys_title_set_visable(bool enable)
+{
+    if (lv_sys_title == NULL)
+    {
+        return;
+    }
+    lv_anim_t anim;
+    lv_anim_init(&anim);
+    lv_anim_set_var(&anim, lv_sys_title);
+    lv_anim_set_time(&anim, 300);
+    lv_anim_set_exec_cb(&anim, ui_sys_title_hidden_anim);
+    lv_anim_set_path_cb(&anim, lv_anim_path_linear);
+
+    if (enable)
+    {
+       lv_anim_set_values(&anim, -lv_obj_get_height(lv_sys_title), 0);
+    }
+    else
+    {
+        lv_anim_set_values(&anim, 0, -lv_obj_get_height(lv_sys_title));
+    }
+    lv_anim_start(&anim);
+}
+
+// 主视图滚动事件
+static void szp_ui_main_tileview_changed_event(lv_event_t *ev)
+{
+    static bool tileview_first_triggered = false;//第一次触发完成
+    if (lv_obj_get_index(lv_tileview_get_tile_act(lv_ui_main_tileview)) == SZP_UI_MTV_PAGE_MONITOR && tileview_first_triggered == false)
+    {
+        ui_sys_title_set_visable(false);
+        tileview_first_triggered = true;
+    }
+    else if (lv_obj_get_index(lv_tileview_get_tile_act(lv_ui_main_tileview)) == SZP_UI_MTV_PAGE_HOME)
+    {
+        if (tileview_first_triggered == true)
+        {
+            ui_sys_title_set_visable(true);
+        }
+        tileview_first_triggered = false;
+    }
+    else if (lv_obj_get_index(lv_tileview_get_tile_act(lv_ui_main_tileview)) == SZP_UI_MTV_PAGE_APP && tileview_first_triggered == false)
+    {
+        ui_sys_title_set_visable(false);
+        tileview_first_triggered = true;
+    }    
+ }
+//主视图初始化
+void szp_ui_main_tileview_init()
+{
+    //设置透明视图样式
+    lv_style_init(&lv_ui_main_tileview_style);
+    lv_style_set_radius(&lv_ui_main_tileview_style, 0);
+    lv_style_set_bg_opa(&lv_ui_main_tileview_style, LV_OPA_TRANSP);
+    lv_style_set_border_width(&lv_ui_main_tileview_style, 0);
+    lv_style_set_pad_all(&lv_ui_main_tileview_style, 0);
+    //初始化主视图
+    lv_ui_main_tileview = lv_tileview_create(lv_ui_sys_obj);
+    lv_obj_add_event_cb(lv_ui_main_tileview, szp_ui_main_tileview_changed_event, LV_EVENT_VALUE_CHANGED, NULL);
+    lv_obj_add_style(lv_ui_main_tileview, &lv_ui_main_tileview_style, 0);
+    lv_obj_set_scrollbar_mode(lv_ui_main_tileview, LV_SCROLLBAR_MODE_OFF);
+
+
+    //添加视图页面
+    //添加监控页面
+    lv_ui_monitor_page = lv_tileview_add_tile(lv_ui_main_tileview, SZP_UI_MTV_PAGE_MONITOR, 0, LV_DIR_RIGHT);
+    ui_home_monitor_setup(lv_ui_monitor_page);
+
+    //添加首页面
+    lv_ui_home_page = lv_tileview_add_tile(lv_ui_main_tileview, SZP_UI_MTV_PAGE_HOME, 0, LV_DIR_RIGHT | LV_DIR_LEFT);
+    ui_home_page_setup(lv_ui_home_page);
+
+    //添加app页面
+    lv_ui_app_page = lv_tileview_add_tile(lv_ui_main_tileview, SZP_UI_MTV_PAGE_APP, 0, LV_DIR_LEFT);
+    ui_home_app_setup(lv_ui_app_page);
+
+    //设置初始化为首页
+    lv_obj_set_tile(lv_ui_main_tileview, lv_ui_home_page, LV_ANIM_OFF);
+}
+
 //UI系统安装
 void szp_ui_sys_setup(void)
 {
@@ -263,10 +362,10 @@ void szp_ui_sys_setup(void)
     szp_ui_sys_obj_init();
     //初始化系统标题栏
     szp_ui_sys_title_init();
-
-    //安装主页UI
-    ui_main_setup();
+    //主视图初始化
+    szp_ui_main_tileview_init();
 }
+
 //获取UI对象
 lv_obj_t *szp_ui_get_ui_sys_obj(void)
 {

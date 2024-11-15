@@ -1,4 +1,4 @@
-#include "ui_szp_main.h"
+#include "ui_szp_home_page.h"
 #include "lvgl.h"
 #include "ui_common_def.h"
 #include "common/common_macro.h"
@@ -307,7 +307,7 @@ static void ui_home_page_down_init()
   lv_home_page_gif = lv_gif_create(lv_home_page_obj);
   lv_gif_set_src(lv_home_page_gif, &gif_szp_duckyo);
   lv_obj_align(lv_home_page_gif, LV_ALIGN_BOTTOM_LEFT, 10, -5);
-
+  
   //室内温湿度
   //室内控件块
   static lv_style_t indoor_style;
@@ -341,7 +341,7 @@ static void ui_home_page_down_init()
 
   // 室外温湿度
   // 室外控件块
-    static lv_style_t outdoor_style;
+   static lv_style_t outdoor_style;
   lv_style_init(&outdoor_style);
   lv_style_set_radius(&outdoor_style, 10);  // 设置圆角半径
   lv_style_set_bg_color(&outdoor_style, lv_color_hex(0xF0FF8C)); 
@@ -373,7 +373,7 @@ static void ui_home_page_down_init()
 }
 
 //初始化首页界面
-static void ui_home_page_init()
+static void ui_home_page_init(lv_obj_t *parent)
 {
   //初始化首页样式和对象
   lv_style_init(&lv_home_page_style);
@@ -385,7 +385,7 @@ static void ui_home_page_init()
   lv_style_set_height(&lv_home_page_style, SZP_LV_UI_VER-lv_obj_get_height(szp_ui_get_sys_title()));
 
   //初始化首页对象
-  lv_home_page_obj = lv_obj_create(szp_ui_get_ui_sys_obj());
+  lv_home_page_obj = lv_obj_create(parent);
   lv_obj_add_style(lv_home_page_obj, &lv_home_page_style, 0);
   lv_obj_align(lv_home_page_obj, LV_ALIGN_BOTTOM_MID, 0, 0);
 
@@ -411,11 +411,11 @@ static void ui_home_page_init()
  
 }
 
-void ui_main_setup(void)
+void ui_home_page_setup(lv_obj_t *parent)
 {
     //安装首页界面
     ui_home_page_init_complete = false;
-    ui_home_page_init();
+    ui_home_page_init(parent);
     ui_home_page_init_complete = true;
 }
 
