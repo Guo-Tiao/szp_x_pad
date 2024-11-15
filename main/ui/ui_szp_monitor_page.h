@@ -3,4 +3,4 @@
 
 
 //监控界面UI安装
-void ui_home_monitor_setup(lv_obj_t *parent);
+void ui_monitor_page_setup(lv_obj_t *parent);

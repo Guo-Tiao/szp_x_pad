@@ -16,10 +16,15 @@ LV_FONT_DECLARE(icon_szp_title_set);
 #define SZP_SYMBOL_BLE_GATTS_STOP          "\xEE\xA8\xAF"             //蓝牙关闭图标:0xea2f
 
 
-/**************************** GIF ****************************/
+/**************************** GIF/IMG ****************************/
 //主界面动图
 LV_IMG_DECLARE(gif_szp_duckyo);
-
+//APP图标
+LV_IMG_DECLARE(img_szp_uart);
+LV_IMG_DECLARE(img_szp_compass);
+LV_IMG_DECLARE(img_szp_gyro);
+LV_IMG_DECLARE(img_szp_setting);
+LV_IMG_DECLARE(img_szp_th);
 /**************************** FONT ****************************/
 LV_FONT_DECLARE(font_szp_Harmony_12);
 LV_FONT_DECLARE(font_szp_Harmony_14);

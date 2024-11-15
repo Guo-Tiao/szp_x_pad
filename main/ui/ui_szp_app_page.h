@@ -2,4 +2,4 @@
 #include "ui_manager.h"
 
 //APP界面UI安装
-void ui_home_app_setup(lv_obj_t *parent);
+void ui_app_page_setup(lv_obj_t *parent);

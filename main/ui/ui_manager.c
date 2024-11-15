@@ -281,6 +281,16 @@ void ui_sys_title_set_visable(bool enable)
     {
         return;
     }
+    //判断是否需要自行隐藏显示动画
+    lv_coord_t y_pos = lv_obj_get_y(lv_sys_title);
+    if(y_pos==0&&enable)    
+    {
+        return;
+    }
+    else if(y_pos!=0&&!enable) 
+    {
+        return;
+    }
     lv_anim_t anim;
     lv_anim_init(&anim);
     lv_anim_set_var(&anim, lv_sys_title);
@@ -318,7 +328,7 @@ static void szp_ui_main_tileview_changed_event(lv_event_t *ev)
     }
     else if (lv_obj_get_index(lv_tileview_get_tile_act(lv_ui_main_tileview)) == SZP_UI_MTV_PAGE_APP && tileview_first_triggered == false)
     {
-        ui_sys_title_set_visable(false);
+        //ui_sys_title_set_visable(true);
         tileview_first_triggered = true;
     }    
  }
@@ -341,7 +351,7 @@ void szp_ui_main_tileview_init()
     //添加视图页面
     //添加监控页面
     lv_ui_monitor_page = lv_tileview_add_tile(lv_ui_main_tileview, SZP_UI_MTV_PAGE_MONITOR, 0, LV_DIR_RIGHT);
-    ui_home_monitor_setup(lv_ui_monitor_page);
+    ui_monitor_page_setup(lv_ui_monitor_page);
 
     //添加首页面
     lv_ui_home_page = lv_tileview_add_tile(lv_ui_main_tileview, SZP_UI_MTV_PAGE_HOME, 0, LV_DIR_RIGHT | LV_DIR_LEFT);
@@ -349,7 +359,7 @@ void szp_ui_main_tileview_init()
 
     //添加app页面
     lv_ui_app_page = lv_tileview_add_tile(lv_ui_main_tileview, SZP_UI_MTV_PAGE_APP, 0, LV_DIR_LEFT);
-    ui_home_app_setup(lv_ui_app_page);
+    ui_app_page_setup(lv_ui_app_page);
 
     //设置初始化为首页
     lv_obj_set_tile(lv_ui_main_tileview, lv_ui_home_page, LV_ANIM_OFF);
