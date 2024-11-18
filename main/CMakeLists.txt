@@ -9,7 +9,8 @@ file(GLOB NETWORK "network/*.c")      #网络
 file(GLOB BLUETOOTH "bluetooth/*.c")      #蓝牙
 file(GLOB STORAGE "storage/*.c")      #存储
 
-file(GLOB UI "ui/*.c")      #显示和触摸
+file(GLOB UI "ui/*.c")      #显示/触摸/UI
+file(GLOB UI_APPPAGE "ui/app_page/*.c")      #APP页面
 file(GLOB ASSETS "assets/*.c")      #资源:图片&音频
 
 file(GLOB SZP_COMPONENTS "szp_components/**/*.c")              #依赖库(部分idf下载的库需要修改则放在此处)
@@ -29,6 +30,7 @@ set(PROJECT_SOURCES
         ${STORAGE}
 
         ${UI}
+        ${UI_APPPAGE}
         ${ASSETS}
 
         ${SZP_COMPONENTS}

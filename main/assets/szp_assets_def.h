@@ -25,9 +25,12 @@ LV_IMG_DECLARE(img_szp_compass);
 LV_IMG_DECLARE(img_szp_gyro);
 LV_IMG_DECLARE(img_szp_setting);
 LV_IMG_DECLARE(img_szp_th);
+LV_IMG_DECLARE(img_szp_back);
+LV_IMG_DECLARE(img_szp_compass_pointer);
 /**************************** FONT ****************************/
 LV_FONT_DECLARE(font_szp_Harmony_12);
 LV_FONT_DECLARE(font_szp_Harmony_14);
 LV_FONT_DECLARE(font_szp_Harmony_16);
 LV_FONT_DECLARE(icon_szp_weather);
 LV_FONT_DECLARE(font_szp_digital);
+LV_FONT_DECLARE(font_szp_compass_24);

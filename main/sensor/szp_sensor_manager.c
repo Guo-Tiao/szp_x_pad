@@ -52,3 +52,39 @@ void szp_sensor_ThGxhtc3_stop_task()
         sensor_ThGxhtc3_update_handle = NULL;
     }
 }
+
+//地磁传感器更新线程句柄
+TaskHandle_t sensor_MgQmc5883L_update_handle=NULL;
+//温度传感器更新线程
+static void task_sensor_MgQmc5883L_update(void *arg)
+{
+    if(szp_sensor_mg_qmc5883l.update==NULL)
+    {
+        sensor_MgQmc5883L_update_handle = NULL;
+        vTaskDelete(NULL);
+    }
+    for (;;)
+    {
+        //后续需要做I2C互斥
+        szp_sensor_mg_qmc5883l.update();
+        vTaskDelay(SZP_MS_TO_TICK(100));
+    }
+    
+}
+
+void szp_sensor_MgQmc5883L_start_task()
+{
+     if(sensor_MgQmc5883L_update_handle==NULL)
+    {
+        xTaskCreate(task_sensor_MgQmc5883L_update, "snr_MgQmc_update,", 2048, NULL, 10, sensor_MgQmc5883L_update_handle);
+    }
+}
+
+void szp_sensor_MgQmc5883L_stop_task()
+{
+    if(sensor_MgQmc5883L_update_handle!=NULL)
+    {
+        vTaskDelete(sensor_MgQmc5883L_update_handle);
+        sensor_MgQmc5883L_update_handle = NULL;
+    }
+}
