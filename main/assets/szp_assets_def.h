@@ -27,6 +27,7 @@ LV_IMG_DECLARE(img_szp_setting);
 LV_IMG_DECLARE(img_szp_th);
 LV_IMG_DECLARE(img_szp_back);
 LV_IMG_DECLARE(img_szp_compass_pointer);
+LV_IMG_DECLARE(img_szp_th_pointer);
 /**************************** FONT ****************************/
 LV_FONT_DECLARE(font_szp_Harmony_12);
 LV_FONT_DECLARE(font_szp_Harmony_14);

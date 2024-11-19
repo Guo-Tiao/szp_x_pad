@@ -8,6 +8,11 @@ void szp_sensor_ThGxhtc3_start_task();
 //关闭温度传感器更新线程
 void szp_sensor_ThGxhtc3_stop_task();
 
+//开启姿态传感器更新线程
+void szp_sensor_PsQmi8658c_start_task();
+//关闭姿态传感器更新线程
+void szp_sensor_PsQmi8658c_stop_task();
+
 //开启地磁传感器更新线程
 void szp_sensor_MgQmc5883L_start_task();
 //关闭地磁传感器更新线程
