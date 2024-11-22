@@ -28,6 +28,11 @@ LV_IMG_DECLARE(img_szp_th);
 LV_IMG_DECLARE(img_szp_back);
 LV_IMG_DECLARE(img_szp_compass_pointer);
 LV_IMG_DECLARE(img_szp_th_pointer);
+LV_IMG_DECLARE(img_szp_ble);
+LV_IMG_DECLARE(img_szp_wifi);
+LV_IMG_DECLARE(img_szp_brightness);
+LV_IMG_DECLARE(img_szp_weather);
+LV_IMG_DECLARE(img_szp_about);
 /**************************** FONT ****************************/
 LV_FONT_DECLARE(font_szp_Harmony_12);
 LV_FONT_DECLARE(font_szp_Harmony_14);

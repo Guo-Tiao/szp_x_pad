@@ -8,8 +8,9 @@
 #define Nvs_Key_Wifi_Ssid                   "wifi_ssid"                 //wifi名称
 #define Nvs_Key_Wifi_Password          "wifi_password"       //wifi密码
 
-#define Nvs_Key_Weather_Api_Key     "weather_key"          //天气API密钥
-#define Nvs_Key_Weather_Api_City     "weather_city"          //天气API城市
+#define Nvs_Key_Weather_Api_Key            "weather_key"          //天气API密钥
+#define Nvs_Key_Weather_Api_City            "weather_city"          //天气API城市
+#define Nvs_Key_Weather_Update_Min     "weather_min"          //天气API更新时间
 
 
 //网络初始化
@@ -71,6 +72,10 @@ void network_sntp_complete_register_cb(sntp_complete_cb cb);
 bool network_start_weather_timer_task();
 //关闭天气更新任务
 bool network_stop_weather_timer_task();
+//设置天气更新任务时间(分钟)
+void network_weather_set_update_time(uint8_t min);
+//获取天气更新任务时间(分钟)
+uint8_t network_weather_get_update_time(void);
 //天气更新回调
 #include "szp_weather_api.h"
 typedef void (*weather_update_cb)(SzpWeatherInfo info);

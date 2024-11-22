@@ -25,3 +25,5 @@ esp_err_t szp_lcd_init(void);
 void szp_lcd_flush_ready_cb_register(szp_lcd_on_flush_ready_cb cb);
 //绘制图像
 void szp_lcd_draw_bitmap(const void *bitmap,int x_start, int y_start, int x_end, int y_end);
+//设置背光量(0-100)
+void szp_lcd_set_brightness(uint16_t val);

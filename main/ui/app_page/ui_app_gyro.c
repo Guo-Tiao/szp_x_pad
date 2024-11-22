@@ -37,7 +37,7 @@ void ui_app_gyro_setup(lv_obj_t* parent)
     
     //创建图表
     lv_gyro_chart = lv_chart_create(parent); 
-    lv_obj_set_size(lv_gyro_chart, 240, 180);      
+    lv_obj_set_size(lv_gyro_chart, 230, 180);      
     lv_obj_align(lv_gyro_chart,LV_ALIGN_CENTER,15,-15);              
     lv_chart_set_update_mode(lv_gyro_chart, LV_CHART_UPDATE_MODE_SHIFT);
     lv_chart_set_range(lv_gyro_chart, LV_CHART_AXIS_PRIMARY_Y, -100, 100);

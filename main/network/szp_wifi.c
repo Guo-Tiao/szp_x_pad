@@ -13,7 +13,7 @@ static esp_event_handler_instance_t szp_ip_event_handler;
 static esp_event_handler_instance_t szp_wifi_event_handler;
 SzpWifiConnectConfig szp_wifi_connect_config;   //wifi连接配置
 uint8_t szp_wifi_retry_count;   //wifi重连次数
-
+bool szp_wifi_manual_disconnect;//wifi手动关闭
 #define SZP_WIFI_TAG "szp_wifi"
 
 //ip事件回调
@@ -47,21 +47,18 @@ static void szp_wifi_event_cb(void *arg, esp_event_base_t event_base, int32_t ev
         break;
 
     case (WIFI_EVENT_STA_DISCONNECTED)://断连事件
-        if(szp_wifi_retry_count<szp_wifi_connect_config.retry_count)
+        if(!szp_wifi_manual_disconnect)//非手动关闭自动重连
         {
-            esp_wifi_connect();
-            szp_wifi_retry_count++;
-            if(szp_wifi_connect_config.wifi_connect_cb)
+            if(szp_wifi_retry_count<szp_wifi_connect_config.retry_count)
             {
-                szp_wifi_connect_config.wifi_connect_cb(SZP_WIFI_RECONNECTING);
+                esp_wifi_connect();
+                szp_wifi_retry_count++;
             }
         }
-        else
+
+        if(szp_wifi_connect_config.wifi_connect_cb)
         {
-            if(szp_wifi_connect_config.wifi_connect_cb)
-            {
-                szp_wifi_connect_config.wifi_connect_cb(SZP_WIFI_DISCONNECTED);
-            }
+            szp_wifi_connect_config.wifi_connect_cb(SZP_WIFI_DISCONNECTED);
         }
         break;
     }
@@ -103,6 +100,7 @@ esp_err_t szp_wifi_init(void)
 
 esp_err_t szp_wifi_connect(SzpWifiConnectConfig config)
 {
+    szp_wifi_manual_disconnect = false;
     szp_wifi_connect_config.wifi_connect_cb = config.wifi_connect_cb;
     szp_wifi_connect_config.retry_count = config.retry_count;
     szp_wifi_retry_count = 0;
@@ -130,6 +128,7 @@ esp_err_t szp_wifi_connect(SzpWifiConnectConfig config)
 
 esp_err_t szp_wifi_disconnect(void)
 {
+    szp_wifi_manual_disconnect = true;
     return esp_wifi_disconnect();
 }
 

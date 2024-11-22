@@ -53,6 +53,19 @@ void szp_lcd_draw_bitmap(const void *bitmap,int x_start, int y_start, int x_end,
     esp_lcd_panel_draw_bitmap(szp_lcd_panel_handle, x_start, y_start, x_end, y_end, bitmap);
 }
 
+void szp_lcd_set_brightness(uint16_t val)
+{
+    if(val>100)
+    {
+        return;
+    }
+    float  bg_duty = (float)val/100; // 根据滑动条的值计算占空比
+    // 设置占空比
+    ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, 8191*(1-bg_duty)); 
+    // 更新背光
+    ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0);
+}
+
 extern void example_lvgl_demo_ui(lv_disp_t *disp);
 
 //屏幕初始化
