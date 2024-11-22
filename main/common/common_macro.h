@@ -21,3 +21,6 @@
 #define SZP_WAIT_FOR_INFINITE       portMAX_DELAY            //永久等待
 #define SZP_TICK_TO_MS(tick)           pdTICKS_TO_MS(tick)       //tick转换为ms
 #define SZP_MS_TO_TICK(ms)             pdMS_TO_TICKS(ms)       //ms转换为tick
+
+
+#define Deg_To_Angle_Conff              57.29579143313326        //弧度转换为角度乘以系数

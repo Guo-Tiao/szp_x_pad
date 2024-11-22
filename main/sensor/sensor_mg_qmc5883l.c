@@ -63,10 +63,10 @@ bool sensor_mg_qmc5833l_update(void)
         {
             return false;
         }
-        szp_sensor_mg_qmc5883l.mag_x = mag_reg[0];
-        szp_sensor_mg_qmc5883l.mag_y = mag_reg[1];
-        szp_sensor_mg_qmc5883l.mag_z = mag_reg[2];
-        szp_sensor_mg_qmc5883l.azimuth = (float)atan2(szp_sensor_mg_qmc5883l.mag_y, szp_sensor_mg_qmc5883l.mag_x) * 180.0 / 3.1415926 + 180.0;
+        szp_sensor_mg_qmc5883l.mag.x = mag_reg[0];
+        szp_sensor_mg_qmc5883l.mag.y = mag_reg[1];
+        szp_sensor_mg_qmc5883l.mag.z = mag_reg[2];
+        szp_sensor_mg_qmc5883l.azimuth = (float)atan2(szp_sensor_mg_qmc5883l.mag.y, szp_sensor_mg_qmc5883l.mag.x) * 180.0 / 3.1415926 + 180.0;
     }
     else
     {

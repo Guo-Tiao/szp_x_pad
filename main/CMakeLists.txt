@@ -13,6 +13,8 @@ file(GLOB UI "ui/*.c")      #显示/触摸/UI
 file(GLOB UI_APPPAGE "ui/app_page/*.c")      #APP页面
 file(GLOB ASSETS "assets/*.c")      #资源:图片&音频
 
+file(GLOB UTILS "utils/*.c")      #工具包
+
 file(GLOB SZP_COMPONENTS "szp_components/**/*.c")              #依赖库(部分idf下载的库需要修改则放在此处)
 file(GLOB DEMO "demo/*.c")  #测试demo
 
@@ -32,6 +34,8 @@ set(PROJECT_SOURCES
         ${UI}
         ${UI_APPPAGE}
         ${ASSETS}
+
+        ${UTILS}
 
         ${SZP_COMPONENTS}
         ${DEMO}
@@ -54,6 +58,7 @@ list(APPEND INC_DIR
 #    ${CMAKE_CURRENT_SOURCE_DIR}/assets
 #    ${CMAKE_CURRENT_SOURCE_DIR}/demo   
 )
+
 #IDF注册
 idf_component_register(
                     SRCS  ${PROJECT_SOURCES}

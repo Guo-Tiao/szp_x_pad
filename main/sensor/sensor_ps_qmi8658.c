@@ -8,6 +8,14 @@
 #include "drivers/szp_i2c.h"
 #include "common/common_macro.h"
 
+#define QS_GRAVITY_COFF			      (9.807f)                                                  //重力系数
+#define QS_ACC_SCALE		        	(8192)                                                  //加速度比例(4g为8192)
+#define QS_ACC_COFF		        	(QS_GRAVITY_COFF/QS_ACC_SCALE)                          //加速度系数(QS_GRAVITY_COFF/QS_ACC_COFF)
+#define QS_M_PI                                 (3.141592f)                                         //圆周率
+#define QS_GYR_SCALE		        	(64)                                                        //陀螺仪比例(512dps为64)
+#define QS_GYR_COFF		        	(QS_M_PI/(QS_GYR_SCALE*180))             //陀螺仪系数
+
+
 //姿态传感器
 SensorPsQmi8658c szp_sensor_ps_qmi8658c;
 
@@ -102,7 +110,6 @@ esp_err_t qmi8658c_register_write_byte(uint8_t reg_addr, uint8_t data)
 
 
 
-
 //更新数据
 bool sensor_qs_qmi8658c_update()
 {
@@ -121,20 +128,12 @@ bool sensor_qs_qmi8658c_update()
         {
             return false;
         }
-        szp_sensor_ps_qmi8658c.acc_x = buf[0];
-        szp_sensor_ps_qmi8658c.acc_y = buf[1];
-        szp_sensor_ps_qmi8658c.acc_z = buf[2];
-        szp_sensor_ps_qmi8658c.gyr_x = buf[3];
-        szp_sensor_ps_qmi8658c.gyr_y = buf[4];
-        szp_sensor_ps_qmi8658c.gyr_z = buf[5];
-
-        
-       float temp = (float)szp_sensor_ps_qmi8658c.acc_x / sqrt( ((float)szp_sensor_ps_qmi8658c.acc_y * (float)szp_sensor_ps_qmi8658c.acc_y + (float)szp_sensor_ps_qmi8658c.acc_z * (float)szp_sensor_ps_qmi8658c.acc_z) );
-        szp_sensor_ps_qmi8658c.AngleX = atan(temp)*57.3f; // 180/3.14=57.3
-        temp = (float)szp_sensor_ps_qmi8658c.acc_y / sqrt( ((float)szp_sensor_ps_qmi8658c.acc_x * (float)szp_sensor_ps_qmi8658c.acc_x + (float)szp_sensor_ps_qmi8658c.acc_z * (float)szp_sensor_ps_qmi8658c.acc_z) );
-        szp_sensor_ps_qmi8658c.AngleY = atan(temp)*57.3f; // 180/3.14=57.3
-        temp = (float)szp_sensor_ps_qmi8658c.acc_z / sqrt( ((float)szp_sensor_ps_qmi8658c.acc_x * (float)szp_sensor_ps_qmi8658c.acc_x + (float)szp_sensor_ps_qmi8658c.acc_y * (float)szp_sensor_ps_qmi8658c.acc_y) );
-        szp_sensor_ps_qmi8658c.AngleZ = atan(temp)*57.3f; // 180/3.14=57.3
+        szp_sensor_ps_qmi8658c.data.acc.x = (float) (buf[0]*QS_ACC_COFF);
+        szp_sensor_ps_qmi8658c.data.acc.y = (float) (buf[1]*QS_ACC_COFF);
+        szp_sensor_ps_qmi8658c.data.acc.z = (float) (buf[2]*QS_ACC_COFF);
+        szp_sensor_ps_qmi8658c.data.gyr.x = (float)(buf[3]*QS_GYR_COFF);
+        szp_sensor_ps_qmi8658c.data.gyr.y = (float)(buf[4]*QS_GYR_COFF);
+        szp_sensor_ps_qmi8658c.data.gyr.z = (float)(buf[5]*QS_GYR_COFF);
     }
     else
     {
@@ -147,7 +146,6 @@ bool sensor_qs_qmi8658c_update()
 void sensor_qs_qmi8658c_init(void)
 {
     uint8_t id = 0;
-
     while (id != 0x05)
     {
         qmi8658c_register_read(QMI8658C_WHO_AM_I, &id ,1);
