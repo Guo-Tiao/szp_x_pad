@@ -104,7 +104,8 @@
         "esp_crt_bundle.h": "c",
         "esp_bt_device.h": "c",
         "imu_tool.h": "c",
-        "math.h": "c"
+        "math.h": "c",
+        "random": "c"
     },
     "C_Cpp.intelliSenseCachePath": "E:\\VsCode_Cache\\"
 }
