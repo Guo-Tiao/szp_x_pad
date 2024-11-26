@@ -33,6 +33,8 @@ LV_IMG_DECLARE(img_szp_wifi);
 LV_IMG_DECLARE(img_szp_brightness);
 LV_IMG_DECLARE(img_szp_weather);
 LV_IMG_DECLARE(img_szp_about);
+LV_IMG_DECLARE(img_szp_uart_send);
+
 /**************************** FONT ****************************/
 LV_FONT_DECLARE(font_szp_Harmony_12);
 LV_FONT_DECLARE(font_szp_Harmony_14);
