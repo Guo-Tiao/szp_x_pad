@@ -28,12 +28,6 @@
 #define SZP_GATTS_CHAR_ID_WIFI_AUTO_CONNECT                0xFF74             //wifi-自动连接 可读写(1自动连接/0不自动连接)
 #define SZP_GATTS_DESCR_ID_WIFI_AUTO_CONNECT              0x2774             //描述
 
-#define SZP_GATTS_CHAR_ID_WEATHER_API_KEY      0xFF81             //天气API-key
-#define SZP_GATTS_DESCR_ID_WEATHER_API_KEY    0x2781             //描述
-
-#define SZP_GATTS_CHAR_ID_WEATHER_API_CITY      0xFF82             //天气城市代码
-#define SZP_GATTS_DESCR_ID_WEATHER_API_CITY    0x2782             //描述
-
 //GATTS事件回调
 static void szp_work_ble_gatts_event_callback(SzpBleGattsEvent e)
 {
@@ -66,8 +60,6 @@ static size_t szp_work_ble_gatts_char_read_callback(uint16_t uuid, char *value, 
             memcpy(value, buf, len);
             return len;
         }
-    case SZP_GATTS_CHAR_ID_WEATHER_API_CITY:
-        return szp_nvs_read_str(Nvs_NameSpace_Network, Nvs_Key_Weather_Api_City, value,maxlen);
     default:
         break;
     }
@@ -120,16 +112,6 @@ static void szp_work_ble_gatts_char_write_callback(uint16_t uuid, const char *va
                 uint8_t val = 1;
                 szp_nvs_write_blob(Nvs_NameSpace_App, Nvs_Key_Wifi_AutoConnect, &val, 1);
             }
-        }
-        break;
-    case SZP_GATTS_CHAR_ID_WEATHER_API_KEY:
-        {
-            szp_nvs_write_str(Nvs_NameSpace_Network, Nvs_Key_Weather_Api_Key, value);
-        }
-        break;
-    case SZP_GATTS_CHAR_ID_WEATHER_API_CITY:
-        {
-            szp_nvs_write_str(Nvs_NameSpace_Network, Nvs_Key_Weather_Api_City, value);
         }
         break;
     default:
@@ -192,32 +174,6 @@ static void szp_work_ble_gatts_start()
             
         };
     szp_ble_gatts_add_char(char_wifi_auto_connect);
-
-    szp_gatts_char_descr char_weather_api_key =
-        {
-            .char_uuid = SZP_GATTS_CHAR_ID_WEATHER_API_KEY,
-            .char_perm = ESP_GATT_PERM_WRITE,
-            .char_property = ESP_GATT_CHAR_PROP_BIT_WRITE,
-
-            .add_descr = true,
-            .descr_uuid = SZP_GATTS_DESCR_ID_WEATHER_API_KEY,
-            .descr_value = "天气API-Key",
-
-        };
-    szp_ble_gatts_add_char(char_weather_api_key);
-
-    szp_gatts_char_descr char_weather_api_city =
-        {
-            .char_uuid = SZP_GATTS_CHAR_ID_WEATHER_API_CITY,
-            .char_perm = ESP_GATT_PERM_READ | ESP_GATT_PERM_WRITE,
-            .char_property = ESP_GATT_CHAR_PROP_BIT_READ | ESP_GATT_CHAR_PROP_BIT_WRITE | ESP_GATT_CHAR_PROP_BIT_NOTIFY,
-
-            .add_descr = true,
-            .descr_uuid = SZP_GATTS_DESCR_ID_WEATHER_API_CITY,
-            .descr_value = "天气API-城市代码",
-
-        };
-    szp_ble_gatts_add_char(char_weather_api_city);
 
     //注册读写回调
     szp_ble_gatts_char_cb_t cb_t=
@@ -300,9 +256,6 @@ static void szp_work_network_start()
     network_sntp_complete_register_cb(szp_ui_sntp_complete_event);
     network_start_sntp_task();
 
-    // 开启天气获取定时任务
-    network_weather_update_register_cb(szp_ui_weather_update_info);
-    network_start_weather_timer_task();
 }
 /******************************************* Networkl *******************************************/
 

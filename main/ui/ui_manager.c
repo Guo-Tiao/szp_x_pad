@@ -216,12 +216,7 @@ void szp_ui_update_network_wifi_event(SzpWifiStateEvent ev)
 
 void szp_ui_sntp_complete_event()
 {
-    ui_home_page_upate_date();
-}
 
-void szp_ui_weather_update_info(SzpWeatherInfo info)
-{
-    ui_home_page_weather_update_info(info);
 }
 
 //标题栏初始化

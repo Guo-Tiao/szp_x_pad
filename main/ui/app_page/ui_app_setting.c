@@ -17,10 +17,6 @@ lv_obj_t *lv_st_ble_sw;//蓝牙开关
 lv_obj_t *lv_st_wifi_panel;//wifi设置板
 lv_obj_t *lv_st_wifi_sw;//蓝牙开关
 
-
-lv_obj_t *lv_st_weather_panel;//天气设置板
-lv_obj_t *lv_st_weather_drop;//天气下来
-
 lv_obj_t *lv_st_brightness_panel;//背光设置板
 lv_obj_t *lv_st_brightness_slider;//背光条
 lv_obj_t *lv_st_brightness_lb;//背光值
@@ -100,30 +96,7 @@ static void ui_app_st_wifi_sw_cb(lv_event_t *ev)
         network_wifi_disconnect();
     }
 }
-//weater设置
-static void ui_app_st_weather_drop_cb(lv_event_t *ev)
-{
-    uint16_t idx = lv_dropdown_get_selected(lv_st_weather_drop);
-    uint16_t min = 10;
-    switch (idx)
-    {
-    case 0:
-        min = 5;
-        break;
-    case 1:
-        min = 10;
-        break;
-    case 2:
-        min = 30;
-        break;
-    case 3:
-        min = 60;
-        break;
-    default:
-        break;
-    }
-    network_weather_set_update_time(min);
-}
+
 //背光设置
 static void ui_app_st_bn_slider_cb(lv_event_t *ev)
 {
@@ -235,40 +208,6 @@ void ui_app_setting_setup(lv_obj_t* parent)
     lv_obj_set_height(lv_st_wifi_sw, 25);
     ((network_wifi_current_state() == EV_SZP_WIFI_CONNECT_SUCCESS) ? lv_obj_add_state(lv_st_wifi_sw, LV_STATE_CHECKED) : lv_obj_clear_state(lv_st_wifi_sw, LV_STATE_CHECKED));
     lv_obj_add_event_cb(lv_st_wifi_sw, ui_app_st_wifi_sw_cb, LV_EVENT_CLICKED, NULL);
-
-    // 创建天气设置
-    lv_st_weather_panel  = ui_app_setting_create_list_item_panel(lv_setting_list, 200, 75);
-    lv_obj_t *weather_lb = ui_app_setting_create_list_item_title_icon(lv_st_weather_panel, "天气更新时间(分钟)", &img_szp_weather);
-    lv_obj_align(weather_lb, LV_ALIGN_TOP_MID, 15, 0);
-
-    lv_st_weather_drop = lv_dropdown_create(lv_st_weather_panel);
-    lv_obj_set_style_text_font(lv_st_weather_drop, &lv_font_montserrat_12, 0);
-    lv_dropdown_set_options(lv_st_weather_drop, "5\n10\n30\n60");
-    uint8_t min = network_weather_get_update_time();
-    switch (min)
-    {
-    case 5:
-        lv_dropdown_set_selected(lv_st_weather_drop, 0);
-        break;
-     case 10:
-         lv_dropdown_set_selected(lv_st_weather_drop, 1);
-         break;
-    case 30:
-        lv_dropdown_set_selected(lv_st_weather_drop, 2);
-        break;
-    case 60:
-        lv_dropdown_set_selected(lv_st_weather_drop, 3);
-        break;
-    default:
-        lv_dropdown_set_selected(lv_st_weather_drop, 1);
-        break;
-    }
-    lv_dropdown_set_dir(lv_st_weather_drop, LV_DIR_BOTTOM);
-    lv_dropdown_set_symbol(lv_st_weather_drop, LV_SYMBOL_DOWN);
-    lv_obj_set_width(lv_st_weather_drop, 100);
-    lv_obj_set_height(lv_st_weather_drop, LV_SIZE_CONTENT);
-    lv_obj_align(lv_st_weather_drop, LV_ALIGN_BOTTOM_MID, 15, -5);
-    lv_obj_add_event_cb(lv_st_weather_drop, ui_app_st_weather_drop_cb, LV_EVENT_VALUE_CHANGED, NULL);
 
     //创建亮度设置
     lv_st_brightness_panel  = ui_app_setting_create_list_item_panel(lv_setting_list, 240, 64);
