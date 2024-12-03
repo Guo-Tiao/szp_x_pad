@@ -226,7 +226,7 @@ void ui_app_setting_setup(lv_obj_t* parent)
 
     lv_st_brightness_lb = lv_label_create(lv_st_brightness_panel);
     lv_label_set_text(lv_st_brightness_lb, "50");
-    lv_obj_align_to(lv_st_brightness_lb, lv_st_brightness_slider,LV_ALIGN_OUT_RIGHT_MID, 15, 0);
+    lv_obj_align_to(lv_st_brightness_lb, lv_st_brightness_slider,LV_ALIGN_OUT_RIGHT_MID, 15, 0);  
 
     // 创建关于
     lv_st_about_panel = ui_app_setting_create_list_item_panel(lv_setting_list, 180, 64);

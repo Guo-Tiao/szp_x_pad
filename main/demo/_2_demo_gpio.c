@@ -5,7 +5,7 @@
 #include "freertos/queue.h"
 #include "driver/gpio.h"
 
-#define DEMO_GPIO_KEY_NUM   GPIO_NUM_9
+#define DEMO_GPIO_KEY_NUM   GPIO_NUM_0
 
 //按键中断队列
 static QueueHandle_t  s_demo_gpio_key_evt_queue = NULL;

@@ -10,7 +10,7 @@
 #include "freertos/event_groups.h"
 
 
-#define SZP_KEY_NUM   GPIO_NUM_9
+#define SZP_KEY_NUM   GPIO_NUM_0            //ESPS3-KEY的GPIO为IO0
 #define SZP_KEY_MONITOR_TASK_PRIO                         10                                        //监控任务优先级
 #define SZP_KEY_MONITOR_TASK_DELAY                      10                                        //监控任务睡眠
 

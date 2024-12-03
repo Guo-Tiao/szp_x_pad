@@ -15,9 +15,6 @@ menu "Szp Project Config"
         config ENABLE_SZP_IOT    
             bool "使能物联网(开启WIFI和蓝牙)"
             default n    
-        config SZP_LVGL_VER_DISP
-            bool "使能LVGL竖屏显示"
-            default n 
         config SZP_UI_TITLE_SHOW_DEBUG
                 bool "使能标题栏显示调试信息"
                 default n 
@@ -50,9 +47,9 @@ menu "Szp Project Config"
                     default SZP_EXP_ITF_UART_RX_TX_1   
 
                     config SZP_EXP_ITF_UART_RX_TX_1
-                        bool "RX-IO18/TX-IO19"
+                        bool "RX-IO10/TX-IO11"
                     config SZP_EXP_ITF_UART_RX_TX_2
-                        bool "RX-IO19/TX-IO18"
+                        bool "RX-IO11/TX-IO10"
                 endchoice
                 #串口波特率        
                 choice 
