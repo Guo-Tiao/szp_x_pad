@@ -171,5 +171,5 @@ void ui_app_uart_setup(lv_obj_t* parent)
     lv_obj_add_event_cb(lv_uart_keyboard, ui_app_uart_kb_hide_cb, LV_EVENT_CLICKED, NULL);
 
     //开启线程
-    xTaskCreate(task_ui_app_uart_recv_data, "tk_ui_uart_recv_data", 4096, NULL, 10, task_ui_app_uart_recv_handle);
+    xTaskCreatePinnedToCore(task_ui_app_uart_recv_data, "tk_ui_uart_recv_data", 4096, NULL, 10, task_ui_app_uart_recv_handle,1);
 }

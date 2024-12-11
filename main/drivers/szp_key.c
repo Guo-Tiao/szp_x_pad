@@ -257,7 +257,7 @@ void szp_key_init(void)
      //创建队列
     szp_key_monitor_evt_queue = xQueueCreate(1, sizeof(uint32_t));
     //创建线程
-    xTaskCreate(szp_key_monitor_task, "szp_key_monitor_task", 2048, NULL, SZP_KEY_MONITOR_TASK_PRIO, &szp_key_monitor_task_handle);
+    xTaskCreatePinnedToCore(szp_key_monitor_task, "szp_key_monitor_task", 2048, NULL, SZP_KEY_MONITOR_TASK_PRIO, &szp_key_monitor_task_handle,0);
 
 }
 

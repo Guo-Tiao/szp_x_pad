@@ -24,7 +24,7 @@ static void ui_btn_clicked_cb(lv_event_t * e)
  }
 
 
-static void _demo_ui_test(void)
+void _demo_ui_test(void)
 {
     lv_obj_t *scr = lv_scr_act();
     meter = lv_meter_create(scr);

@@ -225,7 +225,7 @@ static void task_network_mqtt_start(void *arg)
 
 void network_start_mqtt_task()
 {
-    xTaskCreate(task_network_mqtt_start, "task_network_mqtt_start", 4096, NULL, 5, NULL);
+    xTaskCreatePinnedToCore(task_network_mqtt_start, "task_network_mqtt_start", 4096, NULL, 5, NULL,1);
 }
 
 #endif
@@ -292,7 +292,7 @@ static void task_network_sntp_get_time(void *arg)
 
 void network_start_sntp_task()
 {
-    xTaskCreate(task_network_sntp_get_time, "nw_sntp_get_time", 2048, NULL, 5, NULL);
+    xTaskCreatePinnedToCore(task_network_sntp_get_time, "nw_sntp_get_time", 2048, NULL, 5, NULL,1);
 }
 
 void network_sntp_complete_register_cb(sntp_complete_cb cb)

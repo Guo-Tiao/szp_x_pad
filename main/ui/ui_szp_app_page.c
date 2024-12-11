@@ -11,7 +11,6 @@ static lv_obj_t * lv_app_page_flex;//app视图对象
 static lv_style_t lv_app_obj_style; //app对象样式
 static lv_style_t lv_app_btn_style; //btn对象样式
 lv_obj_t *lv_app_uart_btn;//串口按钮
-lv_obj_t *lv_app_compass_btn;//指南针(地磁传感器)按钮
 lv_obj_t *lv_app_gyro_btn;//陀螺仪按钮
 lv_obj_t *lv_app_th_btn;//温湿度按钮
 lv_obj_t *lv_app_setting_btn;//设置按钮
@@ -230,7 +229,6 @@ static void ui_app_page_init(lv_obj_t *parent)
 
     //创建APP
     lv_app_uart_btn = ui_app_create_btn(&img_szp_uart, "串口",ui_app_uart_cb); 
-    lv_app_compass_btn = ui_app_create_btn(&img_szp_compass, "指南针",ui_app_compass_cb);
     lv_app_gyro_btn = ui_app_create_btn(&img_szp_gyro, "陀螺仪",ui_app_gyro_cb); 
     lv_app_th_btn = ui_app_create_btn(&img_szp_th, "温湿度",ui_app_th_cb);
     lv_app_setting_btn = ui_app_create_btn(&img_szp_setting, "设置",ui_app_setting_cb);

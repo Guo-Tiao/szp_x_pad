@@ -250,7 +250,7 @@ void ui_monitor_page_setup(lv_obj_t *parent)
     lv_label_set_text(lv_monitor_net_down_lb, "0b/s");
 
     //创建线程
-    xTaskCreate(task_ui_monitor_read_data, "tk_ui_monitor", 4096, NULL, 10, ui_monitor_task_handle);
+    xTaskCreatePinnedToCore(task_ui_monitor_read_data, "tk_ui_monitor", 4096, NULL, 10, ui_monitor_task_handle,1);
     ui_monitor_page_task_control(false);
     //创建页面控制
     lv_obj_add_event_cb(lv_monitor_page_obj, ui_monitor_page_move_cb, LV_EVENT_DRAW_PART_END, NULL);

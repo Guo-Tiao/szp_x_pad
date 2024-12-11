@@ -2,6 +2,7 @@
 #include "szp_key.h"
 #include "szp_i2c.h"
 #include "szp_ioext.h"
+#include "szp_cam.h"
 
 #if   CONFIG_SZP_EXP_ITF_FUNC_UART
 #include "szp_uart.h"
@@ -15,6 +16,8 @@ void drv_init(void)
     szp_i2c_init();
     //初始化扩展IO芯片
     szp_ioext_init();
+    //初始化摄像头
+    szp_cam_init();
 #if   CONFIG_SZP_EXP_ITF_FUNC_UART
      //初始化串口
     szp_uart_init();

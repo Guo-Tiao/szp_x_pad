@@ -31,7 +31,7 @@ void app_core_init()
 
 }
 
-
+extern void _demo_ui_test(void);
 void app_core_run(void)
 {
    szp_ui_sys_setup();

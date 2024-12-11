@@ -12,7 +12,7 @@ lv_timer_t *lv_gyro_timer;//定时器
 
 static void ui_app_gyro_update_data(lv_timer_t *timer)
 {
-    euler_angles e = u_calc_euler_angles(szp_sensor_ps_qmi8658c.data);
+    euler_angles e = u_calc_euler_angles(szp_sensor_ps_qmi8658.data);
     int16_t pitch =(int16_t)(e.pitch * Deg_To_Angle_Conff);
     int16_t roll =(int16_t)(e.roll * Deg_To_Angle_Conff)-5;
     lv_chart_set_next_value(lv_gyro_chart, lv_gyro_pitch, pitch);
@@ -28,7 +28,7 @@ static void ui_app_gyro_parent_del(lv_event_t *ev)
     {
         lv_timer_del(lv_gyro_timer);
     }
-    szp_sensor_PsQmi8658c_stop_task();
+    szp_sensor_PsQmi8658_stop_task();
 }
 
 void ui_app_gyro_setup(lv_obj_t* parent)
@@ -75,5 +75,5 @@ void ui_app_gyro_setup(lv_obj_t* parent)
     lv_obj_align_to(lv_gyro_roll_lb, lv_roll_lbs, LV_ALIGN_OUT_RIGHT_MID, 10, 0);
     lv_label_set_text(lv_gyro_roll_lb, "0°");
 
-    szp_sensor_PsQmi8658c_start_task();
+    szp_sensor_PsQmi8658_start_task();
 }
